@@ -518,6 +518,8 @@
   "components.UserProfile.UserSettings.UserNotificationSettings.validationTelegramChatId": "Du musst eine gültige Chat-ID angeben",
   "components.UserProfile.UserSettings.UserNotificationSettings.telegramChatIdTipLong": "<TelegramBotLink>Starte einen Chat</TelegramBotLink>, füge <GetIdBotLink>@get_id_bot</GetIdBotLink> hinzu, und führe den Befehl <code>/my_id</code> aus",
   "components.UserProfile.UserSettings.UserNotificationSettings.telegramChatId": "Chat-ID",
+  "components.Settings.Notifications.messageThreadId": "Thread/Topic ID",
+  "components.Settings.Notifications.messageThreadIdTip": "Wenn Thread/Topics in der Chatgruppe aktiv sind, kanst du hier die Thread/Topic ID eingeben",
   "components.UserProfile.UserSettings.UserNotificationSettings.sendSilentlyDescription": "Sende Benachrichtigungen ohne Ton",
   "components.UserProfile.UserSettings.UserNotificationSettings.sendSilently": "Lautlos senden",
   "components.TvDetails.seasons": "{seasonCount, plural, one {# Staffel} other {# Staffeln}}",
