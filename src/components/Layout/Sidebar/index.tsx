@@ -150,7 +150,7 @@ const Sidebar = ({ open, setClosed }: SidebarProps) => {
                     <div className="flex flex-shrink-0 items-center px-2">
                       <span className="px-4 text-xl text-gray-50">
                         <a href="/">
-                          <img src="/logo.png" alt="Logo" />
+                          <img src="/logo2.png" alt="Logo" />
                         </a>
                       </span>
                     </div>
