@@ -1,4 +1,4 @@
-FROM node:16.17-alpine AS BUILD_IMAGE
+FROM node:16.17-alpine AS build_image
 
 WORKDIR /app
 
@@ -40,7 +40,7 @@ WORKDIR /app
 RUN apk add --no-cache tzdata tini && rm -rf /tmp/*
 
 # copy from build image
-COPY --from=BUILD_IMAGE /app ./
+COPY --from=build_image /app ./
 
 ENTRYPOINT [ "/sbin/tini", "--" ]
 CMD [ "yarn", "start" ]
