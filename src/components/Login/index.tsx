@@ -81,7 +81,7 @@ const Login = () => {
         <LanguagePicker />
       </div>
       <div className="relative z-40 mt-10 flex flex-col items-center px-4 sm:mx-auto sm:w-full sm:max-w-md">
-        <img src="/logo.png" className="mb-10 max-w-full" alt="Logo" />
+        <img src="/logo_full.png" className="mb-10 max-w-full" alt="Logo" />
       </div>
       <div className="relative z-50 mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div
