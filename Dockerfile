@@ -18,8 +18,6 @@ RUN CYPRESS_INSTALL_BINARY=0 yarn install --frozen-lockfile --network-timeout 10
 
 COPY . ./
 
-ARG COMMIT_TAG
-ENV COMMIT_TAG=${COMMIT_TAG}
 
 RUN yarn build
 
