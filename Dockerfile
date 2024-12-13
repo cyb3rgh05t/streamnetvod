@@ -23,7 +23,7 @@ ENV COMMIT_TAG=${COMMIT_TAG}
 
 RUN yarn build
 
-# remove development dependencies
+# remove
 RUN yarn install --production --ignore-scripts --prefer-offline
 
 RUN rm -rf src server .next/cache
