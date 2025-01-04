@@ -1,4 +1,3 @@
-import useSettings from '@app/hooks/useSettings';
 import globalMessages from '@app/i18n/globalMessages';
 import PlexOAuth from '@app/utils/plex';
 import { ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline';
@@ -25,14 +24,11 @@ const PlexLoginButton = ({
 }: PlexLoginButtonProps) => {
   const intl = useIntl();
   const [loading, setLoading] = useState(false);
-  const settings = useSettings();
 
   const getPlexLogin = async () => {
     setLoading(true);
     try {
-      const authToken = await plexOAuth.login(
-        settings.currentSettings.applicationTitle
-      );
+      const authToken = await plexOAuth.login();
       setLoading(false);
       onAuthToken(authToken);
     } catch (e) {
