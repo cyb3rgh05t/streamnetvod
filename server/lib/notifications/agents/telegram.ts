@@ -107,7 +107,7 @@ class TelegramAgent
       }
 
       if (status) {
-        message += `\n\*Anfrage von:\* ${status}`;
+        message += `\n\*Anfrage Status:\* ${status}`;
       }
     } else if (payload.comment) {
       message += `\n\n\*Kommentar von ${this.escapeText(
