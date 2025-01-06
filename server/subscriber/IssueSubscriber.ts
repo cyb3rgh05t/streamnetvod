@@ -46,13 +46,13 @@ export class IssueSubscriber implements EntitySubscriberInterface<Issue> {
 
       if (entity.media.mediaType === MediaType.TV && entity.problemSeason > 0) {
         extra.push({
-          name: 'Affected Season',
+          name: 'Betroffene Staffel',
           value: entity.problemSeason.toString(),
         });
 
         if (entity.problemEpisode > 0) {
           extra.push({
-            name: 'Affected Episode',
+            name: 'Betroffene Episode',
             value: entity.problemEpisode.toString(),
           });
         }
@@ -61,22 +61,22 @@ export class IssueSubscriber implements EntitySubscriberInterface<Issue> {
       notificationManager.sendNotification(type, {
         event:
           type === Notification.ISSUE_CREATED
-            ? `New ${
+            ? `${
                 entity.issueType !== IssueType.OTHER
                   ? `${IssueTypeName[entity.issueType]} `
                   : ''
-              }Issue Reported`
+              }Problem gemeldet`
             : type === Notification.ISSUE_RESOLVED
             ? `${
                 entity.issueType !== IssueType.OTHER
                   ? `${IssueTypeName[entity.issueType]} `
                   : ''
-              }Issue Resolved`
+              }Problem gelöst`
             : `${
                 entity.issueType !== IssueType.OTHER
                   ? `${IssueTypeName[entity.issueType]} `
                   : ''
-              }Issue Reopened`,
+              }Problem erneut geöffnet`,
         subject: title,
         message: firstComment.message,
         issue: entity,

@@ -1171,30 +1171,30 @@ export class MediaRequest {
 
       switch (type) {
         case Notification.MEDIA_APPROVED:
-          event = `${this.is4k ? '4K ' : ''}${mediaType} Request Approved`;
+          event = `${this.is4k ? '4K ' : ''}Anfrage genehmigt für ${mediaType}`;
           notifyAdmin = false;
           break;
         case Notification.MEDIA_DECLINED:
-          event = `${this.is4k ? '4K ' : ''}${mediaType} Request Declined`;
+          event = `${this.is4k ? '4K ' : ''}Anfrage abgelehnt für ${mediaType}`;
           notifyAdmin = false;
           break;
         case Notification.MEDIA_PENDING:
-          event = `New ${this.is4k ? '4K ' : ''}${mediaType} Request`;
+          event = `New ${this.is4k ? '4K ' : ''}Anfrage für ${mediaType}`;
           break;
         case Notification.MEDIA_AUTO_REQUESTED:
           event = `${
             this.is4k ? '4K ' : ''
-          }${mediaType} Request Automatically Submitted`;
+          }Anfrage automatisch übermittelt für ${mediaType}`;
           notifyAdmin = false;
           notifySystem = false;
           break;
         case Notification.MEDIA_AUTO_APPROVED:
           event = `${
             this.is4k ? '4K ' : ''
-          }${mediaType} Request Automatically Approved`;
+          }Anfrage automatisch genehmigt für ${mediaType}`;
           break;
         case Notification.MEDIA_FAILED:
-          event = `${this.is4k ? '4K ' : ''}${mediaType} Request Failed`;
+          event = `${this.is4k ? '4K ' : ''}Anfrage fehlgeschlagen für ${mediaType}`;
           break;
       }
 
@@ -1237,7 +1237,7 @@ export class MediaRequest {
           image: `https://image.tmdb.org/t/p/w600_and_h900_bestv2${tv.poster_path}`,
           extra: [
             {
-              name: 'Requested Seasons',
+              name: 'Angefragte Staffeln',
               value: this.seasons
                 .map((season) => season.seasonNumber)
                 .join(', '),

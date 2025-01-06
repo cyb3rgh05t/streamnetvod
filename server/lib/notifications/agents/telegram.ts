@@ -76,7 +76,7 @@ class TelegramAgent
     }
 
     if (payload.request) {
-      message += `\n\n\*Requested By:\* ${this.escapeText(
+      message += `\n\n\*Angefragt von:\* ${this.escapeText(
         payload.request?.requestedBy.displayName
       )}`;
 
@@ -89,37 +89,37 @@ class TelegramAgent
               : 'Processing';
           break;
         case Notification.MEDIA_PENDING:
-          status = 'Pending Approval';
+          status = 'Ausstehende Genehmigung';
           break;
         case Notification.MEDIA_APPROVED:
         case Notification.MEDIA_AUTO_APPROVED:
-          status = 'Processing';
+          status = 'In Bearbeitung';
           break;
         case Notification.MEDIA_AVAILABLE:
-          status = 'Available';
+          status = 'Verfügbar';
           break;
         case Notification.MEDIA_DECLINED:
-          status = 'Declined';
+          status = 'Abgelehnt';
           break;
         case Notification.MEDIA_FAILED:
-          status = 'Failed';
+          status = 'Fehlgeschlagen';
           break;
       }
 
       if (status) {
-        message += `\n\*Request Status:\* ${status}`;
+        message += `\n\*Anfrage von:\* ${status}`;
       }
     } else if (payload.comment) {
-      message += `\n\n\*Comment from ${this.escapeText(
+      message += `\n\n\*Kommentar von ${this.escapeText(
         payload.comment.user.displayName
       )}:\* ${this.escapeText(payload.comment.message)}`;
     } else if (payload.issue) {
-      message += `\n\n\*Reported By:\* ${this.escapeText(
+      message += `\n\n\*Gemeldet von:\* ${this.escapeText(
         payload.issue.createdBy.displayName
       )}`;
-      message += `\n\*Issue Type:\* ${IssueTypeName[payload.issue.issueType]}`;
-      message += `\n\*Issue Status:\* ${
-        payload.issue.status === IssueStatus.OPEN ? 'Open' : 'Resolved'
+      message += `\n\*Problemtyp:\* ${IssueTypeName[payload.issue.issueType]}`;
+      message += `\n\*Problemstatus:\* ${
+        payload.issue.status === IssueStatus.OPEN ? 'Offen' : 'Gelöst'
       }`;
     }
 

@@ -62,11 +62,11 @@ export class IssueCommentSubscriber
       if (entity.id !== firstComment.id) {
         // Send notifications to all issue managers
         notificationManager.sendNotification(Notification.ISSUE_COMMENT, {
-          event: `New Comment on ${
+          event: `Neuer Kommentar zu ${
             issue.issueType !== IssueType.OTHER
               ? `${IssueTypeName[issue.issueType]} `
               : ''
-          }Issue`,
+          }Problem`,
           subject: title,
           message: firstComment.message,
           comment: entity,
