@@ -26,14 +26,18 @@ jobs:
         run: |
           REPO=$CI_REPOSITORY_NAME
           DOCKER_IMAGE=${{ github.repository_owner }}/${REPO}
-          if [[ "$CI_REF_NAME" == "main" ]]; then
+
+          # Check if the branch is either 'main' or 'master'
+          if [[ "$CI_REF_NAME" == "main" || "$CI_REF_NAME" == "master" ]]; then
             VERSION=latest
           else
-            VERSION=$CI_REF_NAME
+           VERSION=$CI_REF_NAME
           fi
+
           RUNNERNR=$CI_RUN_NUMBER
           CREATED=$(date +'%Y-%m-%dT%H:%M:%SZ')
           TAGS="${DOCKER_IMAGE}:${VERSION}"
+
           echo ::set-output name=tags::${TAGS}
           echo ::set-output name=title::${GITHUB_REPOSITORY}
           echo ::set-output name=version::${VERSION}
