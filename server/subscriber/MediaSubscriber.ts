@@ -13,44 +13,12 @@ import logger from '@server/logger';
 import { truncate } from 'lodash';
 import type { EntitySubscriberInterface, UpdateEvent } from 'typeorm';
 import { EventSubscriber, In, Not } from 'typeorm';
-import { defineMessages, useIntl } from 'react-intl';
-
-const messages = defineMessages({
-  open: 'Open',
-  resolved: 'Resolved',
-  requestedby: 'Requested by',
-  requeststatus: 'Requets Status',
-  commentfrom: 'Comment from',
-  issuetype: 'Issue Typ',
-  issuestatus: 'Issue Status',
-  reportedby: 'Reported by',
-  newcommenton: 'New Comment on',
-  issue: 'Issue',
-  requestapproved: 'Request Approved',
-  requestdeclined: 'Request Declined',
-  requestfor: 'Request',
-  requestautosub: 'Request Automatically Submitted',
-  requestautoapp: 'Request Automatically Approved',
-  requestfailed: 'Request Failed',
-  requestedseasons: 'Requested Seasons',
-  pendingapproval: 'Pending Approval',
-  requestprocess: 'Processing...',
-  affectedseason: 'Affected Season',
-  affectedepisode: 'Affected Epiosode',
-  new: 'New',
-  isssuereported: 'Issue Reported',
-  issueresolved: 'Issue Solved',
-  issuereopened: 'Issue Reopened',
-  movierequestavail: 'Movie Request Now Available',
-  serierequestavail: 'Series Request Now Available',
-});
 
 @EventSubscriber()
 export class MediaSubscriber implements EntitySubscriberInterface<Media> {
   private async notifyAvailableMovie(
     entity: Media,
     dbEntity: Media,
-    intl: any, // Add intl as a parameter
     is4k: boolean
   ) {
     if (
@@ -79,7 +47,7 @@ export class MediaSubscriber implements EntitySubscriberInterface<Media> {
               notificationManager.sendNotification(
                 Notification.MEDIA_AVAILABLE,
                 {
-                  event: `${is4k ? '4K ' : ''}${intl.formatMessage(messages.movierequestavail)}`,
+                  event: `${is4k ? '4K ' : ''}Filmanfage jetzt verfügbar`,
                   notifyAdmin: false,
                   notifySystem: true,
                   notifyUser: request.requestedBy,
@@ -114,7 +82,6 @@ export class MediaSubscriber implements EntitySubscriberInterface<Media> {
   private async notifyAvailableSeries(
     entity: Media,
     dbEntity: Media,
-    intl: any, // Add intl as a parameter
     is4k: boolean
   ) {
     const seasonRepository = getRepository(Season);
@@ -171,7 +138,7 @@ export class MediaSubscriber implements EntitySubscriberInterface<Media> {
           try {
             const tv = await tmdb.getTvShow({ tvId: entity.tmdbId, language: 'de' });
             notificationManager.sendNotification(Notification.MEDIA_AVAILABLE, {
-              event: `${is4k ? '4K ' : ''}${intl.formatMessage(messages.serierequestavail)}`,
+              event: `${is4k ? '4K ' : ''}Serienanfrage jetzt verfügbar`,
               subject: `${tv.name}${
                 tv.first_air_date ? ` (${tv.first_air_date.slice(0, 4)})` : ''
               }`,
@@ -187,7 +154,7 @@ export class MediaSubscriber implements EntitySubscriberInterface<Media> {
               media: entity,
               extra: [
                 {
-                  name: intl.formatMessage(messages.requestedseasons),
+                  name: 'Angefragte Staffeln',
                   value: request.seasons
                     .map((season) => season.seasonNumber)
                     .join(', '),
@@ -237,7 +204,7 @@ export class MediaSubscriber implements EntitySubscriberInterface<Media> {
       this.notifyAvailableMovie(
         event.entity as Media,
         event.databaseEntity,
-        false,
+        false
       );
     }
 

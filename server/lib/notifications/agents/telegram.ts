@@ -13,40 +13,6 @@ import {
 } from '..';
 import type { NotificationAgent, NotificationPayload } from './agent';
 import { BaseAgent } from './agent';
-import { defineMessages, useIntl } from 'react-intl';
-
-const messages = defineMessages({
-  open: 'Open',
-  resolved: 'Resolved',
-  requestedby: 'Requested by',
-  requeststatus: 'Requets Status',
-  commentfrom: 'Comment from',
-  issuetype: 'Issue Typ',
-  issuestatus: 'Issue Status',
-  reportedby: 'Reported by',
-  newcommenton: 'New Comment on',
-  issue: 'Issue',
-  requestapproved: 'Request Approved',
-  requestdeclined: 'Request Declined',
-  requestfor: 'Request',
-  requestautosub: 'Request Automatically Submitted',
-  requestautoapp: 'Request Automatically Approved',
-  requestfailed: 'Request Failed',
-  requestedseasons: 'Requested Seasons',
-  pendingapproval: 'Pending Approval',
-  requestprocess: 'Processing...',
-  affectedseason: 'Affected Season',
-  affectedepisode: 'Affected Epiosode',
-  new: 'New',
-  isssuereported: 'Issue Reported',
-  issueresolved: 'Issue Solved',
-  issuereopened: 'Issue Reopened',
-  movierequestavail: 'Movie Request Now Available',
-  serierequestavail: 'Series Request Now Available',
-  available: 'Available',
-  declined: 'Declined',
-  failed: 'Failed',
-});
 
 interface TelegramMessagePayload {
   text: string;
@@ -97,8 +63,7 @@ class TelegramAgent
 
   private getNotificationPayload(
     type: Notification,
-    payload: NotificationPayload,
-    intl: any
+    payload: NotificationPayload
   ): Partial<TelegramMessagePayload | TelegramPhotoPayload> {
     const { applicationUrl, applicationTitle } = getSettings().main;
 
@@ -111,7 +76,7 @@ class TelegramAgent
     }
 
     if (payload.request) {
-      message += `\n\n\*${intl.formatMessage(messages.requestedby)}:\* ${this.escapeText(
+      message += `\n\n\*Angefragt von:\* ${this.escapeText(
         payload.request?.requestedBy.displayName
       )}`;
 
@@ -124,37 +89,37 @@ class TelegramAgent
               : 'Processing';
           break;
         case Notification.MEDIA_PENDING:
-          status = intl.formatMessage(messages.pendingapproval);
+          status = 'Ausstehende Genehmigung';
           break;
         case Notification.MEDIA_APPROVED:
         case Notification.MEDIA_AUTO_APPROVED:
-          status = intl.formatMessage(messages.requestprocess);
+          status = 'In Bearbeitung';
           break;
         case Notification.MEDIA_AVAILABLE:
-          status = intl.formatMessage(messages.available);
+          status = 'Verfügbar';
           break;
         case Notification.MEDIA_DECLINED:
-          status = intl.formatMessage(messages.declined);
+          status = 'Abgelehnt';
           break;
         case Notification.MEDIA_FAILED:
-          status = intl.formatMessage(messages.failed);
+          status = 'Fehlgeschlagen';
           break;
       }
 
       if (status) {
-        message += `\n\*${intl.formatMessage(messages.requeststatus)}:\* ${status}`;
+        message += `\n\*Anfrage Status:\* ${status}`;
       }
     } else if (payload.comment) {
-      message += `\n\n\*${intl.formatMessage(messages.commentfrom)} ${this.escapeText(
+      message += `\n\n\*Kommentar von ${this.escapeText(
         payload.comment.user.displayName
       )}:\* ${this.escapeText(payload.comment.message)}`;
     } else if (payload.issue) {
-      message += `\n\n\*${intl.formatMessage(messages.reportedby)}:\* ${this.escapeText(
+      message += `\n\n\*Gemeldet von:\* ${this.escapeText(
         payload.issue.createdBy.displayName
       )}`;
-      message += `\n\*${intl.formatMessage(messages.issuetype)}:\* ${IssueTypeName[payload.issue.issueType]}`;
-      message += `\n\*${intl.formatMessage(messages.issuestatus)}:\* ${
-        payload.issue.status === IssueStatus.OPEN ? intl.formatMessage(messages.open) : intl.formatMessage(messages.resolved)
+      message += `\n\*Problemtyp:\* ${IssueTypeName[payload.issue.issueType]}`;
+      message += `\n\*Problemstatus:\* ${
+        payload.issue.status === IssueStatus.OPEN ? 'Offen' : 'Gelöst'
       }`;
     }
 
@@ -191,14 +156,13 @@ class TelegramAgent
 
   public async send(
     type: Notification,
-    payload: NotificationPayload,
-    intl: any
+    payload: NotificationPayload
   ): Promise<boolean> {
     const settings = this.getSettings();
     const endpoint = `${this.baseUrl}bot${settings.options.botAPI}/${
       payload.image ? 'sendPhoto' : 'sendMessage'
     }`;
-    const notificationPayload = this.getNotificationPayload(type, payload, intl);
+    const notificationPayload = this.getNotificationPayload(type, payload);
 
     // Send system notification
     if (

@@ -11,37 +11,6 @@ import logger from '@server/logger';
 import { sortBy } from 'lodash';
 import type { EntitySubscriberInterface, InsertEvent } from 'typeorm';
 import { EventSubscriber } from 'typeorm';
-import { defineMessages, useIntl } from 'react-intl';
-
-const messages = defineMessages({
-  open: 'Open',
-  resolved: 'Resolved',
-  requestedby: 'Requested by',
-  requeststatus: 'Requets Status',
-  commentfrom: 'Comment from',
-  issuetype: 'Issue Typ',
-  issuestatus: 'Issue Status',
-  reportedby: 'Reported by',
-  newcommenton: 'New Comment on',
-  issue: 'Issue',
-  requestapproved: 'Request Approved',
-  requestdeclined: 'Request Declined',
-  requestfor: 'Request',
-  requestautosub: 'Request Automatically Submitted',
-  requestautoapp: 'Request Automatically Approved',
-  requestfailed: 'Request Failed',
-  requestedseasons: 'Requested Seasons',
-  pendingapproval: 'Pending Approval',
-  requestprocess: 'Processing...',
-  affectedseason: 'Affected Season',
-  affectedepisode: 'Affected Epiosode',
-  new: 'New',
-  isssuereported: 'Issue Reported',
-  issueresolved: 'Issue Solved',
-  issuereopened: 'Issue Reopened',
-  movierequestavail: 'Movie Request Now Available',
-  serierequestavail: 'Series Request Now Available',
-});
 
 @EventSubscriber()
 export class IssueCommentSubscriber
@@ -51,7 +20,7 @@ export class IssueCommentSubscriber
     return IssueComment;
   }
 
-  private async sendIssueCommentNotification(entity: IssueComment, intl: any) {
+  private async sendIssueCommentNotification(entity: IssueComment) {
     let title: string;
     let image: string;
     const tmdb = new TheMovieDb();
@@ -93,11 +62,11 @@ export class IssueCommentSubscriber
       if (entity.id !== firstComment.id) {
         // Send notifications to all issue managers
         notificationManager.sendNotification(Notification.ISSUE_COMMENT, {
-          event: `${intl.formatMessage(messages.newcommenton)} ${
+          event: `Neuer Kommentar zu ${
             issue.issueType !== IssueType.OTHER
               ? `${IssueTypeName[issue.issueType]} `
               : ''
-          }${intl.formatMessage(messages.issue)}`,
+          }Problem`,
           subject: title,
           message: firstComment.message,
           comment: entity,
@@ -125,11 +94,11 @@ export class IssueCommentSubscriber
     }
   }
 
-  public afterInsert(intl: any, event: InsertEvent<IssueComment>): void {
+  public afterInsert(event: InsertEvent<IssueComment>): void {
     if (!event.entity) {
       return;
     }
 
-    this.sendIssueCommentNotification(event.entity, intl);
+    this.sendIssueCommentNotification(event.entity);
   }
 }

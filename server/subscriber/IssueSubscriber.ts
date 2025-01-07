@@ -4,7 +4,6 @@ import { MediaType } from '@server/constants/media';
 import Issue from '@server/entity/Issue';
 import notificationManager, { Notification } from '@server/lib/notifications';
 import { Permission } from '@server/lib/permissions';
-import { defineMessages, useIntl } from 'react-intl';
 import logger from '@server/logger';
 import { sortBy } from 'lodash';
 import type {
@@ -14,43 +13,13 @@ import type {
 } from 'typeorm';
 import { EventSubscriber } from 'typeorm';
 
-const messages = defineMessages({
-  open: 'Open',
-  resolved: 'Resolved',
-  requestedby: 'Requested by',
-  requeststatus: 'Requets Status',
-  commentfrom: 'Comment from',
-  issuetype: 'Issue Typ',
-  issuestatus: 'Issue Status',
-  reportedby: 'Reported by',
-  newcommenton: 'New Comment on',
-  issue: 'Issue',
-  requestapproved: 'Request Approved',
-  requestdeclined: 'Request Declined',
-  requestfor: 'Request',
-  requestautosub: 'Request Automatically Submitted',
-  requestautoapp: 'Request Automatically Approved',
-  requestfailed: 'Request Failed',
-  requestedseasons: 'Requested Seasons',
-  pendingapproval: 'Pending Approval',
-  requestprocess: 'Processing...',
-  affectedseason: 'Affected Season',
-  affectedepisode: 'Affected Epiosode',
-  new: 'New',
-  isssuereported: 'Issue Reported',
-  issueresolved: 'Issue Solved',
-  issuereopened: 'Issue Reopened',
-  movierequestavail: 'Movie Request Now Available',
-  serierequestavail: 'Series Request Now Available',
-});
-
 @EventSubscriber()
 export class IssueSubscriber implements EntitySubscriberInterface<Issue> {
   public listenTo(): typeof Issue {
     return Issue;
   }
 
-  private async sendIssueNotification(entity: Issue, type: Notification, intl: any) {
+  private async sendIssueNotification(entity: Issue, type: Notification) {
     let title: string;
     let image: string;
     const tmdb = new TheMovieDb();
@@ -77,13 +46,13 @@ export class IssueSubscriber implements EntitySubscriberInterface<Issue> {
 
       if (entity.media.mediaType === MediaType.TV && entity.problemSeason > 0) {
         extra.push({
-          name: intl.formatMessage(messages.affectedseason),
+          name: 'Betroffene Staffel',
           value: entity.problemSeason.toString(),
         });
 
         if (entity.problemEpisode > 0) {
           extra.push({
-            name: intl.formatMessage(messages.affectedepisode),
+            name: 'Betroffene Episode',
             value: entity.problemEpisode.toString(),
           });
         }
@@ -92,22 +61,22 @@ export class IssueSubscriber implements EntitySubscriberInterface<Issue> {
       notificationManager.sendNotification(type, {
         event:
           type === Notification.ISSUE_CREATED
-            ? `${
+            ? `Neues ${
                 entity.issueType !== IssueType.OTHER
                   ? `${IssueTypeName[entity.issueType]} `
                   : ''
-              }${intl.formatMessage(messages.issue)}`
+              }Problem gemeldet`
             : type === Notification.ISSUE_RESOLVED
             ? `${
                 entity.issueType !== IssueType.OTHER
                   ? `${IssueTypeName[entity.issueType]} `
                   : ''
-              }${intl.formatMessage(messages.issueresolved)}`
+              }Problem gelöst`
             : `${
                 entity.issueType !== IssueType.OTHER
                   ? `${IssueTypeName[entity.issueType]} `
                   : ''
-              }${intl.formatMessage(messages.issuereopened)}`,
+              }Problem erneut geöffnet`,
         subject: title,
         message: firstComment.message,
         issue: entity,

@@ -35,7 +35,6 @@ import {
 import Media from './Media';
 import SeasonRequest from './SeasonRequest';
 import { User } from './User';
-import { defineMessages, useIntl } from 'react-intl';
 
 export class RequestPermissionError extends Error {}
 export class QuotaRestrictedError extends Error {}
@@ -45,36 +44,6 @@ export class NoSeasonsAvailableError extends Error {}
 type MediaRequestOptions = {
   isAutoRequest?: boolean;
 };
-
-const messages = defineMessages({
-  open: 'Open',
-  resolved: 'Resolved',
-  requestedby: 'Requested by',
-  requeststatus: 'Requets Status',
-  commentfrom: 'Comment from',
-  issuetype: 'Issue Typ',
-  issuestatus: 'Issue Status',
-  reportedby: 'Reported by',
-  newcommenton: 'New Comment on',
-  issue: 'Issue',
-  requestapproved: 'Request Approved',
-  requestdeclined: 'Request Declined',
-  requestfor: 'Request',
-  requestautosub: 'Request Automatically Submitted',
-  requestautoapp: 'Request Automatically Approved',
-  requestfailed: 'Request Failed',
-  requestedseasons: 'Requested Seasons',
-  pendingapproval: 'Pending Approval',
-  requestprocess: 'Processing...',
-  affectedseason: 'Affected Season',
-  affectedepisode: 'Affected Epiosode',
-  new: 'New',
-  isssuereported: 'Issue Reported',
-  issueresolved: 'Issue Solved',
-  issuereopened: 'Issue Reopened',
-  movierequestavail: 'Movie Request Now Available',
-  serierequestavail: 'Series Request Now Available',
-});
 
 @Entity()
 export class MediaRequest {
@@ -497,12 +466,12 @@ export class MediaRequest {
 
   @AfterUpdate()
   @AfterInsert()
-  public async sendMedia(intl: any): Promise<void> {
-    await Promise.all([this.sendToRadarr(intl), this.sendToSonarr(intl)]);
+  public async sendMedia(): Promise<void> {
+    await Promise.all([this.sendToRadarr(), this.sendToSonarr()]);
   }
 
   @AfterInsert()
-  public async notifyNewRequest(intl: any): Promise<void> {
+  public async notifyNewRequest(): Promise<void> {
     if (this.status === MediaRequestStatus.PENDING) {
       const mediaRepository = getRepository(Media);
       const media = await mediaRepository.findOne({
@@ -517,10 +486,10 @@ export class MediaRequest {
         return;
       }
 
-      this.sendNotification(media, Notification.MEDIA_PENDING, intl);
+      this.sendNotification(media, Notification.MEDIA_PENDING);
 
       if (this.isAutoRequest) {
-        this.sendNotification(media, Notification.MEDIA_AUTO_REQUESTED, intl);
+        this.sendNotification(media, Notification.MEDIA_AUTO_REQUESTED);
       }
     }
   }
@@ -532,7 +501,7 @@ export class MediaRequest {
    * auto approved content
    */
   @AfterUpdate()
-  public async notifyApprovedOrDeclined(intl: any, autoApproved = false): Promise<void> {
+  public async notifyApprovedOrDeclined(autoApproved = false): Promise<void> {
     if (
       this.status === MediaRequestStatus.APPROVED ||
       this.status === MediaRequestStatus.DECLINED
@@ -564,7 +533,7 @@ export class MediaRequest {
           ? autoApproved
             ? Notification.MEDIA_AUTO_APPROVED
             : Notification.MEDIA_APPROVED
-          : Notification.MEDIA_DECLINED, intl
+          : Notification.MEDIA_DECLINED
       );
 
       if (
@@ -572,13 +541,13 @@ export class MediaRequest {
         autoApproved &&
         this.isAutoRequest
       ) {
-        this.sendNotification(media, Notification.MEDIA_AUTO_REQUESTED, intl);
+        this.sendNotification(media, Notification.MEDIA_AUTO_REQUESTED);
       }
     }
   }
 
   @AfterInsert()
-  public async autoapprovalNotification(intl: any): Promise<void> {
+  public async autoapprovalNotification(): Promise<void> {
     if (this.status === MediaRequestStatus.APPROVED) {
       this.notifyApprovedOrDeclined(true);
     }
@@ -586,7 +555,7 @@ export class MediaRequest {
 
   @AfterUpdate()
   @AfterInsert()
-  public async updateParentStatus(intl: any): Promise<void> {
+  public async updateParentStatus(): Promise<void> {
     const mediaRepository = getRepository(Media);
     const media = await mediaRepository.findOne({
       where: { id: this.media.id },
@@ -651,7 +620,7 @@ export class MediaRequest {
   }
 
   @AfterRemove()
-  public async handleRemoveParentUpdate(intl: any): Promise<void> {
+  public async handleRemoveParentUpdate(): Promise<void> {
     const mediaRepository = getRepository(Media);
     const fullMedia = await mediaRepository.findOneOrFail({
       where: { id: this.media.id },
@@ -675,7 +644,7 @@ export class MediaRequest {
     mediaRepository.save(fullMedia);
   }
 
-  public async sendToRadarr(intl: any): Promise<void> {
+  public async sendToRadarr(): Promise<void> {
     if (
       this.status === MediaRequestStatus.APPROVED &&
       this.type === MediaType.MOVIE
@@ -891,7 +860,7 @@ export class MediaRequest {
               }
             );
 
-            this.sendNotification(media, Notification.MEDIA_FAILED, intl);
+            this.sendNotification(media, Notification.MEDIA_FAILED);
           });
         logger.info('Sent request to Radarr', {
           label: 'Media Request',
@@ -910,7 +879,7 @@ export class MediaRequest {
     }
   }
 
-  public async sendToSonarr(intl: any): Promise<void> {
+  public async sendToSonarr(): Promise<void> {
     if (
       this.status === MediaRequestStatus.APPROVED &&
       this.type === MediaType.TV
@@ -1172,7 +1141,7 @@ export class MediaRequest {
               }
             );
 
-            this.sendNotification(media, Notification.MEDIA_FAILED, intl);
+            this.sendNotification(media, Notification.MEDIA_FAILED);
           });
         logger.info('Sent request to Sonarr', {
           label: 'Media Request',
@@ -1191,7 +1160,7 @@ export class MediaRequest {
     }
   }
 
-  private async sendNotification(media: Media, type: Notification, intl: any) {
+  private async sendNotification(media: Media, type: Notification) {
     const tmdb = new TheMovieDb();
 
     try {
@@ -1202,30 +1171,30 @@ export class MediaRequest {
 
       switch (type) {
         case Notification.MEDIA_APPROVED:
-          event = `${this.is4k ? '4K ' : ''}${intl.formatMessage(messages.requestapproved)} ${mediaType}`;
+          event = `${this.is4k ? '4K ' : ''}Anfrage genehmigt für ${mediaType}`;
           notifyAdmin = false;
           break;
         case Notification.MEDIA_DECLINED:
-          event = `${this.is4k ? '4K ' : ''}${intl.formatMessage(messages.requestdeclined)} ${mediaType}`;
+          event = `${this.is4k ? '4K ' : ''}Anfrage abgelehnt für ${mediaType}`;
           notifyAdmin = false;
           break;
         case Notification.MEDIA_PENDING:
-          event = `${intl.formatMessage(messages.new)} ${this.is4k ? '4K ' : ''}${intl.formatMessage(messages.requestfor)} ${mediaType}`;
+          event = `New ${this.is4k ? '4K ' : ''}Anfrage für ${mediaType}`;
           break;
         case Notification.MEDIA_AUTO_REQUESTED:
           event = `${
             this.is4k ? '4K ' : ''
-          }${intl.formatMessage(messages.requestautosub)} ${mediaType}`;
+          }Anfrage automatisch übermittelt für ${mediaType}`;
           notifyAdmin = false;
           notifySystem = false;
           break;
         case Notification.MEDIA_AUTO_APPROVED:
           event = `${
             this.is4k ? '4K ' : ''
-          }${intl.formatMessage(messages.requestautoapp)} ${mediaType}`;
+          }Anfrage automatisch genehmigt für ${mediaType}`;
           break;
         case Notification.MEDIA_FAILED:
-          event = `${this.is4k ? '4K ' : ''}${intl.formatMessage(messages.requestfailed)} ${mediaType}`;
+          event = `${this.is4k ? '4K ' : ''}Anfrage fehlgeschlagen für ${mediaType}`;
           break;
       }
 
@@ -1268,7 +1237,7 @@ export class MediaRequest {
           image: `https://image.tmdb.org/t/p/w600_and_h900_bestv2${tv.poster_path}`,
           extra: [
             {
-              name: intl.formatMessage(messages.requestedseasons),
+              name: 'Angefragte Staffeln',
               value: this.seasons
                 .map((season) => season.seasonNumber)
                 .join(', '),
