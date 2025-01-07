@@ -13,6 +13,42 @@ import {
 } from '..';
 import type { NotificationAgent, NotificationPayload } from './agent';
 import { BaseAgent } from './agent';
+import globalMessages from '@app/i18n/globalMessages';
+import { defineMessages, useIntl } from 'react-intl';
+
+const messages = defineMessages({
+  open: 'Open',
+  resolved: 'Resolved',
+  requestedby: 'Requested by',
+  requeststatus: 'Requets Status',
+  commentfrom: 'Comment from',
+  issuetype: 'Issue Typ',
+  issuestatus: 'Issue Status',
+  reportedby: 'Reported by',
+  newcommenton: 'New Comment on',
+  issue: 'Issue',
+  requestapproved: 'Request Approved',
+  requestdeclined: 'Request Declined',
+  requestfor: 'Request',
+  requestautosub: 'Request Automatically Submitted',
+  requestautoapp: 'Request Automatically Approved',
+  requestfailed: 'Request Failed',
+  requestedseasons: 'Requested Seasons',
+  pendingapproval: 'Pending Approval',
+  requestprocess: 'Processing...',
+  affectedseason: 'Affected Season',
+  affectedepisode: 'Affected Epiosode',
+  new: 'New',
+  isssuereported: 'Issue Reported',
+  issueresolved: 'Issue Solved',
+  issuereopened: 'Issue Reopened',
+  movierequestavail: 'Movie Request Now Available',
+  serierequestavail: 'Series Request Now Available',
+  tmdblang: 'en',
+  available: 'Available',
+  declined: 'Declined',
+  failed: 'Failed',
+});
 
 interface TelegramMessagePayload {
   text: string;
@@ -63,7 +99,8 @@ class TelegramAgent
 
   private getNotificationPayload(
     type: Notification,
-    payload: NotificationPayload
+    payload: NotificationPayload,
+    intl: any
   ): Partial<TelegramMessagePayload | TelegramPhotoPayload> {
     const { applicationUrl, applicationTitle } = getSettings().main;
 
@@ -76,7 +113,7 @@ class TelegramAgent
     }
 
     if (payload.request) {
-      message += `\n\n\*Angefragt von:\* ${this.escapeText(
+      message += `\n\n\*${intl.formatMessage(messages.requestedby)}:\* ${this.escapeText(
         payload.request?.requestedBy.displayName
       )}`;
 
@@ -89,37 +126,37 @@ class TelegramAgent
               : 'Processing';
           break;
         case Notification.MEDIA_PENDING:
-          status = 'Ausstehende Genehmigung';
+          status = intl.formatMessage(messages.pendingapproval);
           break;
         case Notification.MEDIA_APPROVED:
         case Notification.MEDIA_AUTO_APPROVED:
-          status = 'In Bearbeitung';
+          status = intl.formatMessage(messages.requestprocess);
           break;
         case Notification.MEDIA_AVAILABLE:
-          status = 'Verfügbar';
+          status = intl.formatMessage(messages.available);
           break;
         case Notification.MEDIA_DECLINED:
-          status = 'Abgelehnt';
+          status = intl.formatMessage(messages.declined);
           break;
         case Notification.MEDIA_FAILED:
-          status = 'Fehlgeschlagen';
+          status = intl.formatMessage(messages.failed);
           break;
       }
 
       if (status) {
-        message += `\n\*Anfrage Status:\* ${status}`;
+        message += `\n\*${intl.formatMessage(messages.requeststatus)}:\* ${status}`;
       }
     } else if (payload.comment) {
-      message += `\n\n\*Kommentar von ${this.escapeText(
+      message += `\n\n\*${intl.formatMessage(messages.commentfrom)} ${this.escapeText(
         payload.comment.user.displayName
       )}:\* ${this.escapeText(payload.comment.message)}`;
     } else if (payload.issue) {
-      message += `\n\n\*Gemeldet von:\* ${this.escapeText(
+      message += `\n\n\*${intl.formatMessage(messages.reportedby)}:\* ${this.escapeText(
         payload.issue.createdBy.displayName
       )}`;
-      message += `\n\*Problemtyp:\* ${IssueTypeName[payload.issue.issueType]}`;
-      message += `\n\*Problemstatus:\* ${
-        payload.issue.status === IssueStatus.OPEN ? 'Offen' : 'Gelöst'
+      message += `\n\*${intl.formatMessage(messages.issuetype)}:\* ${IssueTypeName[payload.issue.issueType]}`;
+      message += `\n\*${intl.formatMessage(messages.issuestatus)}:\* ${
+        payload.issue.status === IssueStatus.OPEN ? intl.formatMessage(messages.open) : intl.formatMessage(messages.resolved)
       }`;
     }
 

@@ -4,6 +4,8 @@ import { MediaType } from '@server/constants/media';
 import Issue from '@server/entity/Issue';
 import notificationManager, { Notification } from '@server/lib/notifications';
 import { Permission } from '@server/lib/permissions';
+import globalMessages from '@app/i18n/globalMessages';
+import { defineMessages, useIntl } from 'react-intl';
 import logger from '@server/logger';
 import { sortBy } from 'lodash';
 import type {
@@ -13,27 +15,58 @@ import type {
 } from 'typeorm';
 import { EventSubscriber } from 'typeorm';
 
+const messages = defineMessages({
+  open: 'Open',
+  resolved: 'Resolved',
+  requestedby: 'Requested by',
+  requeststatus: 'Requets Status',
+  commentfrom: 'Comment from',
+  issuetype: 'Issue Typ',
+  issuestatus: 'Issue Status',
+  reportedby: 'Reported by',
+  newcommenton: 'New Comment on',
+  issue: 'Issue',
+  requestapproved: 'Request Approved',
+  requestdeclined: 'Request Declined',
+  requestfor: 'Request',
+  requestautosub: 'Request Automatically Submitted',
+  requestautoapp: 'Request Automatically Approved',
+  requestfailed: 'Request Failed',
+  requestedseasons: 'Requested Seasons',
+  pendingapproval: 'Pending Approval',
+  requestprocess: 'Processing...',
+  affectedseason: 'Affected Season',
+  affectedepisode: 'Affected Epiosode',
+  new: 'New',
+  isssuereported: 'Issue Reported',
+  issueresolved: 'Issue Solved',
+  issuereopened: 'Issue Reopened',
+  movierequestavail: 'Movie Request Now Available',
+  serierequestavail: 'Series Request Now Available',
+  tmdblang: 'en',
+});
+
 @EventSubscriber()
 export class IssueSubscriber implements EntitySubscriberInterface<Issue> {
   public listenTo(): typeof Issue {
     return Issue;
   }
 
-  private async sendIssueNotification(entity: Issue, type: Notification) {
+  private async sendIssueNotification(entity: Issue, type: Notification, intl: any) {
     let title: string;
     let image: string;
     const tmdb = new TheMovieDb();
 
     try {
       if (entity.media.mediaType === MediaType.MOVIE) {
-        const movie = await tmdb.getMovie({ movieId: entity.media.tmdbId, language: 'de' });
+        const movie = await tmdb.getMovie({ movieId: entity.media.tmdbId, language: intl.formatMessage(messages.tmdblang) });
 
         title = `${movie.title}${
           movie.release_date ? ` (${movie.release_date.slice(0, 4)})` : ''
         }`;
         image = `https://image.tmdb.org/t/p/w600_and_h900_bestv2${movie.poster_path}`;
       } else {
-        const tvshow = await tmdb.getTvShow({ tvId: entity.media.tmdbId, language: 'de' });
+        const tvshow = await tmdb.getTvShow({ tvId: entity.media.tmdbId, language: intl.formatMessage(messages.tmdblang) });
 
         title = `${tvshow.name}${
           tvshow.first_air_date ? ` (${tvshow.first_air_date.slice(0, 4)})` : ''
@@ -46,13 +79,13 @@ export class IssueSubscriber implements EntitySubscriberInterface<Issue> {
 
       if (entity.media.mediaType === MediaType.TV && entity.problemSeason > 0) {
         extra.push({
-          name: 'Betroffene Staffel',
+          name: intl.formatMessage(messages.affectedseason),
           value: entity.problemSeason.toString(),
         });
 
         if (entity.problemEpisode > 0) {
           extra.push({
-            name: 'Betroffene Episode',
+            name: intl.formatMessage(messages.affectedepisode),
             value: entity.problemEpisode.toString(),
           });
         }
@@ -65,18 +98,18 @@ export class IssueSubscriber implements EntitySubscriberInterface<Issue> {
                 entity.issueType !== IssueType.OTHER
                   ? `${IssueTypeName[entity.issueType]} `
                   : ''
-              }Problem gemeldet`
+              }${intl.formatMessage(messages.issue)}`
             : type === Notification.ISSUE_RESOLVED
             ? `${
                 entity.issueType !== IssueType.OTHER
                   ? `${IssueTypeName[entity.issueType]} `
                   : ''
-              }Problem gelöst`
+              }${intl.formatMessage(messages.issueresolved}`
             : `${
                 entity.issueType !== IssueType.OTHER
                   ? `${IssueTypeName[entity.issueType]} `
                   : ''
-              }Problem erneut geöffnet`,
+              }${intl.formatMessage(messages.issuereopened)}`,
         subject: title,
         message: firstComment.message,
         issue: entity,

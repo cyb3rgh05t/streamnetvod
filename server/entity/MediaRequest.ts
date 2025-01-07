@@ -35,6 +35,8 @@ import {
 import Media from './Media';
 import SeasonRequest from './SeasonRequest';
 import { User } from './User';
+import globalMessages from '@app/i18n/globalMessages';
+import { defineMessages, useIntl } from 'react-intl';
 
 export class RequestPermissionError extends Error {}
 export class QuotaRestrictedError extends Error {}
@@ -44,6 +46,37 @@ export class NoSeasonsAvailableError extends Error {}
 type MediaRequestOptions = {
   isAutoRequest?: boolean;
 };
+
+const messages = defineMessages({
+  open: 'Open',
+  resolved: 'Resolved',
+  requestedby: 'Requested by',
+  requeststatus: 'Requets Status',
+  commentfrom: 'Comment from',
+  issuetype: 'Issue Typ',
+  issuestatus: 'Issue Status',
+  reportedby: 'Reported by',
+  newcommenton: 'New Comment on',
+  issue: 'Issue',
+  requestapproved: 'Request Approved',
+  requestdeclined: 'Request Declined',
+  requestfor: 'Request',
+  requestautosub: 'Request Automatically Submitted',
+  requestautoapp: 'Request Automatically Approved',
+  requestfailed: 'Request Failed',
+  requestedseasons: 'Requested Seasons',
+  pendingapproval: 'Pending Approval',
+  requestprocess: 'Processing...',
+  affectedseason: 'Affected Season',
+  affectedepisode: 'Affected Epiosode',
+  new: 'New',
+  isssuereported: 'Issue Reported',
+  issueresolved: 'Issue Solved',
+  issuereopened: 'Issue Reopened',
+  movierequestavail: 'Movie Request Now Available',
+  serierequestavail: 'Series Request Now Available',
+  tmdblang: 'en',
+});
 
 @Entity()
 export class MediaRequest {
@@ -1160,7 +1193,7 @@ export class MediaRequest {
     }
   }
 
-  private async sendNotification(media: Media, type: Notification) {
+  private async sendNotification(media: Media, type: Notification, intl: any) {
     const tmdb = new TheMovieDb();
 
     try {
@@ -1171,35 +1204,35 @@ export class MediaRequest {
 
       switch (type) {
         case Notification.MEDIA_APPROVED:
-          event = `${this.is4k ? '4K ' : ''}Anfrage genehmigt für ${mediaType}`;
+          event = `${this.is4k ? '4K ' : ''}${intl.formatMessage(messages.requestapproved)} ${mediaType}`;
           notifyAdmin = false;
           break;
         case Notification.MEDIA_DECLINED:
-          event = `${this.is4k ? '4K ' : ''}Anfrage abgelehnt für ${mediaType}`;
+          event = `${this.is4k ? '4K ' : ''}${intl.formatMessage(messages.requestdeclined)} ${mediaType}`;
           notifyAdmin = false;
           break;
         case Notification.MEDIA_PENDING:
-          event = `New ${this.is4k ? '4K ' : ''}Anfrage für ${mediaType}`;
+          event = `${intl.formatMessage(messages.new)} ${this.is4k ? '4K ' : ''}${intl.formatMessage(messages.requestfor)} ${mediaType}`;
           break;
         case Notification.MEDIA_AUTO_REQUESTED:
           event = `${
             this.is4k ? '4K ' : ''
-          }Anfrage automatisch übermittelt für ${mediaType}`;
+          }${intl.formatMessage(messages.requestautosub)} ${mediaType}`;
           notifyAdmin = false;
           notifySystem = false;
           break;
         case Notification.MEDIA_AUTO_APPROVED:
           event = `${
             this.is4k ? '4K ' : ''
-          }Anfrage automatisch genehmigt für ${mediaType}`;
+          }${intl.formatMessage(messages.requestautoapp)} ${mediaType}`;
           break;
         case Notification.MEDIA_FAILED:
-          event = `${this.is4k ? '4K ' : ''}Anfrage fehlgeschlagen für ${mediaType}`;
+          event = `${this.is4k ? '4K ' : ''}${intl.formatMessage(messages.requestfailed)} ${mediaType}`;
           break;
       }
 
       if (this.type === MediaType.MOVIE) {
-        const movie = await tmdb.getMovie({ movieId: media.tmdbId, language: 'de' });
+        const movie = await tmdb.getMovie({ movieId: media.tmdbId, language: intl.formatMessage(messages.tmdblang) });
         notificationManager.sendNotification(type, {
           media,
           request: this,
@@ -1218,7 +1251,7 @@ export class MediaRequest {
           image: `https://image.tmdb.org/t/p/w600_and_h900_bestv2${movie.poster_path}`,
         });
       } else if (this.type === MediaType.TV) {
-        const tv = await tmdb.getTvShow({ tvId: media.tmdbId, language: 'de' });
+        const tv = await tmdb.getTvShow({ tvId: media.tmdbId, language: intl.formatMessage(messages.tmdblang) });
         notificationManager.sendNotification(type, {
           media,
           request: this,
@@ -1237,7 +1270,7 @@ export class MediaRequest {
           image: `https://image.tmdb.org/t/p/w600_and_h900_bestv2${tv.poster_path}`,
           extra: [
             {
-              name: 'Angefragte Staffeln',
+              name: intl.formatMessage(messages.requestedseasons),
               value: this.seasons
                 .map((season) => season.seasonNumber)
                 .join(', '),

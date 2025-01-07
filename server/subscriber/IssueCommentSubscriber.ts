@@ -11,6 +11,39 @@ import logger from '@server/logger';
 import { sortBy } from 'lodash';
 import type { EntitySubscriberInterface, InsertEvent } from 'typeorm';
 import { EventSubscriber } from 'typeorm';
+import globalMessages from '@app/i18n/globalMessages';
+import { defineMessages, useIntl } from 'react-intl';
+
+const messages = defineMessages({
+  open: 'Open',
+  resolved: 'Resolved',
+  requestedby: 'Requested by',
+  requeststatus: 'Requets Status',
+  commentfrom: 'Comment from',
+  issuetype: 'Issue Typ',
+  issuestatus: 'Issue Status',
+  reportedby: 'Reported by',
+  newcommenton: 'New Comment on',
+  issue: 'Issue',
+  requestapproved: 'Request Approved',
+  requestdeclined: 'Request Declined',
+  requestfor: 'Request',
+  requestautosub: 'Request Automatically Submitted',
+  requestautoapp: 'Request Automatically Approved',
+  requestfailed: 'Request Failed',
+  requestedseasons: 'Requested Seasons',
+  pendingapproval: 'Pending Approval',
+  requestprocess: 'Processing...',
+  affectedseason: 'Affected Season',
+  affectedepisode: 'Affected Epiosode',
+  new: 'New',
+  isssuereported: 'Issue Reported',
+  issueresolved: 'Issue Solved',
+  issuereopened: 'Issue Reopened',
+  movierequestavail: 'Movie Request Now Available',
+  serierequestavail: 'Series Request Now Available',
+  tmdblang: 'en',
+});
 
 @EventSubscriber()
 export class IssueCommentSubscriber
@@ -20,7 +53,7 @@ export class IssueCommentSubscriber
     return IssueComment;
   }
 
-  private async sendIssueCommentNotification(entity: IssueComment) {
+  private async sendIssueCommentNotification(entity: IssueComment, intl: any) {
     let title: string;
     let image: string;
     const tmdb = new TheMovieDb();
@@ -42,14 +75,14 @@ export class IssueCommentSubscriber
       });
 
       if (media.mediaType === MediaType.MOVIE) {
-        const movie = await tmdb.getMovie({ movieId: media.tmdbId, language: 'de' });
+        const movie = await tmdb.getMovie({ movieId: media.tmdbId, language: intl.formatMessage(messages.tmdblang) });
 
         title = `${movie.title}${
           movie.release_date ? ` (${movie.release_date.slice(0, 4)})` : ''
         }`;
         image = `https://image.tmdb.org/t/p/w600_and_h900_bestv2${movie.poster_path}`;
       } else {
-        const tvshow = await tmdb.getTvShow({ tvId: media.tmdbId, language: 'de' });
+        const tvshow = await tmdb.getTvShow({ tvId: media.tmdbId, language: intl.formatMessage(messages.tmdblang) });
 
         title = `${tvshow.name}${
           tvshow.first_air_date ? ` (${tvshow.first_air_date.slice(0, 4)})` : ''
@@ -62,11 +95,11 @@ export class IssueCommentSubscriber
       if (entity.id !== firstComment.id) {
         // Send notifications to all issue managers
         notificationManager.sendNotification(Notification.ISSUE_COMMENT, {
-          event: `Neuer Kommentar zu ${
+          event: `${intl.formatMessage(messages.newcommenton)} ${
             issue.issueType !== IssueType.OTHER
               ? `${IssueTypeName[issue.issueType]} `
               : ''
-          }Problem`,
+          }${intl.formatMessage(messages.issue)}`,
           subject: title,
           message: firstComment.message,
           comment: entity,

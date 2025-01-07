@@ -13,12 +13,46 @@ import logger from '@server/logger';
 import { truncate } from 'lodash';
 import type { EntitySubscriberInterface, UpdateEvent } from 'typeorm';
 import { EventSubscriber, In, Not } from 'typeorm';
+import globalMessages from '@app/i18n/globalMessages';
+import { defineMessages, useIntl } from 'react-intl';
+
+const messages = defineMessages({
+  open: 'Open',
+  resolved: 'Resolved',
+  requestedby: 'Requested by',
+  requeststatus: 'Requets Status',
+  commentfrom: 'Comment from',
+  issuetype: 'Issue Typ',
+  issuestatus: 'Issue Status',
+  reportedby: 'Reported by',
+  newcommenton: 'New Comment on',
+  issue: 'Issue',
+  requestapproved: 'Request Approved',
+  requestdeclined: 'Request Declined',
+  requestfor: 'Request',
+  requestautosub: 'Request Automatically Submitted',
+  requestautoapp: 'Request Automatically Approved',
+  requestfailed: 'Request Failed',
+  requestedseasons: 'Requested Seasons',
+  pendingapproval: 'Pending Approval',
+  requestprocess: 'Processing...',
+  affectedseason: 'Affected Season',
+  affectedepisode: 'Affected Epiosode',
+  new: 'New',
+  isssuereported: 'Issue Reported',
+  issueresolved: 'Issue Solved',
+  issuereopened: 'Issue Reopened',
+  movierequestavail: 'Movie Request Now Available',
+  serierequestavail: 'Series Request Now Available',
+  tmdblang: 'en',
+});
 
 @EventSubscriber()
 export class MediaSubscriber implements EntitySubscriberInterface<Media> {
   private async notifyAvailableMovie(
     entity: Media,
     dbEntity: Media,
+    intl: any, // Add intl as a parameter
     is4k: boolean
   ) {
     if (
@@ -41,13 +75,13 @@ export class MediaSubscriber implements EntitySubscriberInterface<Media> {
           const tmdb = new TheMovieDb();
 
           try {
-            const movie = await tmdb.getMovie({ movieId: entity.tmdbId, language: 'de' });
+            const movie = await tmdb.getMovie({ movieId: entity.tmdbId, language: intl.formatMessage(messages.tmdblang) });
 
             relatedRequests.forEach((request) => {
               notificationManager.sendNotification(
                 Notification.MEDIA_AVAILABLE,
                 {
-                  event: `${is4k ? '4K ' : ''}Filmanfage jetzt verfügbar`,
+                  event: `${is4k ? '4K ' : ''}${intl.formatMessage(messages.movierequestavail)}`,
                   notifyAdmin: false,
                   notifySystem: true,
                   notifyUser: request.requestedBy,
@@ -82,6 +116,7 @@ export class MediaSubscriber implements EntitySubscriberInterface<Media> {
   private async notifyAvailableSeries(
     entity: Media,
     dbEntity: Media,
+    intl: any, // Add intl as a parameter
     is4k: boolean
   ) {
     const seasonRepository = getRepository(Season);
@@ -136,9 +171,9 @@ export class MediaSubscriber implements EntitySubscriberInterface<Media> {
           );
 
           try {
-            const tv = await tmdb.getTvShow({ tvId: entity.tmdbId, language: 'de' });
+            const tv = await tmdb.getTvShow({ tvId: entity.tmdbId, language: intl.formatMessage(messages.tmdblang) });
             notificationManager.sendNotification(Notification.MEDIA_AVAILABLE, {
-              event: `${is4k ? '4K ' : ''}Serienanfrage jetzt verfügbar`,
+              event: `${is4k ? '4K ' : ''}${intl.formatMessage(messages.serierequestavail)}`,
               subject: `${tv.name}${
                 tv.first_air_date ? ` (${tv.first_air_date.slice(0, 4)})` : ''
               }`,
@@ -154,7 +189,7 @@ export class MediaSubscriber implements EntitySubscriberInterface<Media> {
               media: entity,
               extra: [
                 {
-                  name: 'Angefragte Staffeln',
+                  name: intl.formatMessage(messages.requestedseasons),
                   value: request.seasons
                     .map((season) => season.seasonNumber)
                     .join(', '),
