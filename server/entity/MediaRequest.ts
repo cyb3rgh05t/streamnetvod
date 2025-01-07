@@ -500,7 +500,7 @@ export class MediaRequest {
   @AfterUpdate()
   @AfterInsert()
   public async sendMedia(intl: any): Promise<void> {
-    await Promise.all([this.sendToRadarr(), this.sendToSonarr()]);
+    await Promise.all([this.sendToRadarr(intl), this.sendToSonarr(intl)]);
   }
 
   @AfterInsert()
