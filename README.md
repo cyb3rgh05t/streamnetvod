@@ -1,9 +1,9 @@
 <p align="center">
-<img src="./public/logo_full.svg" alt="Overseerr" style="margin: 20px 0;">
+<img src="./public/logo_full.svg" alt="StreamNet VOD" style="margin: 20px 0;">
 </p>
 <p align="center">
-<img src="https://github.com/sct/overseerr/workflows/Overseerr%20Release/badge.svg?branch=master" alt="Overseerr Release" />
-<img src="https://github.com/sct/overseerr/workflows/Overseerr%20CI/badge.svg" alt="Overseerr CI">
+<img src="https://github.com/sct/overseerr/workflows/Overseerr%20Release/badge.svg?branch=master" alt="StreamNet VOD Release" />
+<img src="https://github.com/sct/overseerr/workflows/Overseerr%20CI/badge.svg" alt="StreamNet VOD CI">
 </p>
 <p align="center">
 <a href="https://discord.gg/overseerr"><img src="https://img.shields.io/discord/783137440809746482" alt="Discord"></a>
