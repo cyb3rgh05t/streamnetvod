@@ -43,10 +43,7 @@ const messages = defineMessages({
   issuereopened: 'Issue Reopened',
   movierequestavail: 'Movie Request Now Available',
   serierequestavail: 'Series Request Now Available',
-  tmdblang: {
-    id: 'tmdblang',
-    defaultMessage: 'en',
-  },
+  tmdblang: 'en',
   available: 'Available',
   declined: 'Declined',
   failed: 'Failed',
@@ -195,13 +192,14 @@ class TelegramAgent
 
   public async send(
     type: Notification,
-    payload: NotificationPayload
+    payload: NotificationPayload,
+    intl: any
   ): Promise<boolean> {
     const settings = this.getSettings();
     const endpoint = `${this.baseUrl}bot${settings.options.botAPI}/${
       payload.image ? 'sendPhoto' : 'sendMessage'
     }`;
-    const notificationPayload = this.getNotificationPayload(type, payload);
+    const notificationPayload = this.getNotificationPayload(type, payload, intl);
 
     // Send system notification
     if (

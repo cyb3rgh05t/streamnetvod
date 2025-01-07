@@ -43,10 +43,7 @@ const messages = defineMessages({
   issuereopened: 'Issue Reopened',
   movierequestavail: 'Movie Request Now Available',
   serierequestavail: 'Series Request Now Available',
-  tmdblang: {
-    id: 'tmdblang',
-    defaultMessage: 'en',
-  },
+  tmdblang: 'en',
 });
 
 @EventSubscriber()
@@ -77,7 +74,7 @@ export class MediaSubscriber implements EntitySubscriberInterface<Media> {
           const tmdb = new TheMovieDb();
 
           try {
-            const movie = await tmdb.getMovie({ movieId: entity.tmdbId, language: intl.formatMessage(messages.tmdblang) });
+            const movie = await tmdb.getMovie({ movieId: entity.tmdbId, language: messages.tmdblang });
 
             relatedRequests.forEach((request) => {
               notificationManager.sendNotification(
@@ -173,7 +170,7 @@ export class MediaSubscriber implements EntitySubscriberInterface<Media> {
           );
 
           try {
-            const tv = await tmdb.getTvShow({ tvId: entity.tmdbId, language: intl.formatMessage(messages.tmdblang) });
+            const tv = await tmdb.getTvShow({ tvId: entity.tmdbId, language: messages.tmdblang });
             notificationManager.sendNotification(Notification.MEDIA_AVAILABLE, {
               event: `${is4k ? '4K ' : ''}${intl.formatMessage(messages.serierequestavail)}`,
               subject: `${tv.name}${
@@ -241,7 +238,7 @@ export class MediaSubscriber implements EntitySubscriberInterface<Media> {
       this.notifyAvailableMovie(
         event.entity as Media,
         event.databaseEntity,
-        false
+        false,
       );
     }
 
