@@ -104,7 +104,7 @@ export class IssueSubscriber implements EntitySubscriberInterface<Issue> {
                 entity.issueType !== IssueType.OTHER
                   ? `${IssueTypeName[entity.issueType]} `
                   : ''
-              }${intl.formatMessage(messages.issueresolved}`
+              }${intl.formatMessage(messages.issueresolved)}`
             : `${
                 entity.issueType !== IssueType.OTHER
                   ? `${IssueTypeName[entity.issueType]} `
