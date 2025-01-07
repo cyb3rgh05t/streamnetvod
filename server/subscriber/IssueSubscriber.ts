@@ -42,7 +42,10 @@ const messages = defineMessages({
   issuereopened: 'Issue Reopened',
   movierequestavail: 'Movie Request Now Available',
   serierequestavail: 'Series Request Now Available',
-  tmdblang: 'en',
+  tmdblang: {
+    id: 'tmdblang',
+    defaultMessage: 'en',
+  },
 });
 
 @EventSubscriber()
