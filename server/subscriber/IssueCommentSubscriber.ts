@@ -41,7 +41,6 @@ const messages = defineMessages({
   issuereopened: 'Issue Reopened',
   movierequestavail: 'Movie Request Now Available',
   serierequestavail: 'Series Request Now Available',
-  tmdblang: 'en',
 });
 
 @EventSubscriber()
@@ -74,14 +73,14 @@ export class IssueCommentSubscriber
       });
 
       if (media.mediaType === MediaType.MOVIE) {
-        const movie = await tmdb.getMovie({ movieId: media.tmdbId, language: messages.tmdblang });
+        const movie = await tmdb.getMovie({ movieId: media.tmdbId, language: 'de' });
 
         title = `${movie.title}${
           movie.release_date ? ` (${movie.release_date.slice(0, 4)})` : ''
         }`;
         image = `https://image.tmdb.org/t/p/w600_and_h900_bestv2${movie.poster_path}`;
       } else {
-        const tvshow = await tmdb.getTvShow({ tvId: media.tmdbId, language: messages.tmdblang });
+        const tvshow = await tmdb.getTvShow({ tvId: media.tmdbId, language: 'de' });
 
         title = `${tvshow.name}${
           tvshow.first_air_date ? ` (${tvshow.first_air_date.slice(0, 4)})` : ''

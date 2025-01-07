@@ -43,7 +43,6 @@ const messages = defineMessages({
   issuereopened: 'Issue Reopened',
   movierequestavail: 'Movie Request Now Available',
   serierequestavail: 'Series Request Now Available',
-  tmdblang: 'en',
   available: 'Available',
   declined: 'Declined',
   failed: 'Failed',
