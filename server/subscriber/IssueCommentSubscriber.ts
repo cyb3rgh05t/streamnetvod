@@ -11,7 +11,6 @@ import logger from '@server/logger';
 import { sortBy } from 'lodash';
 import type { EntitySubscriberInterface, InsertEvent } from 'typeorm';
 import { EventSubscriber } from 'typeorm';
-import globalMessages from '@app/i18n/globalMessages';
 import { defineMessages, useIntl } from 'react-intl';
 
 const messages = defineMessages({
@@ -127,11 +126,11 @@ export class IssueCommentSubscriber
     }
   }
 
-  public afterInsert(event: InsertEvent<IssueComment>): void {
+  public afterInsert(intl: any, event: InsertEvent<IssueComment>): void {
     if (!event.entity) {
       return;
     }
 
-    this.sendIssueCommentNotification(event.entity);
+    this.sendIssueCommentNotification(event.entity, intl);
   }
 }

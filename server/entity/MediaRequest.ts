@@ -35,7 +35,6 @@ import {
 import Media from './Media';
 import SeasonRequest from './SeasonRequest';
 import { User } from './User';
-import globalMessages from '@app/i18n/globalMessages';
 import { defineMessages, useIntl } from 'react-intl';
 
 export class RequestPermissionError extends Error {}
