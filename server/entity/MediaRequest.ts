@@ -499,12 +499,12 @@ export class MediaRequest {
 
   @AfterUpdate()
   @AfterInsert()
-  public async sendMedia(): Promise<void> {
+  public async sendMedia(intl: any): Promise<void> {
     await Promise.all([this.sendToRadarr(), this.sendToSonarr()]);
   }
 
   @AfterInsert()
-  public async notifyNewRequest(): Promise<void> {
+  public async notifyNewRequest(intl: any): Promise<void> {
     if (this.status === MediaRequestStatus.PENDING) {
       const mediaRepository = getRepository(Media);
       const media = await mediaRepository.findOne({
@@ -519,10 +519,10 @@ export class MediaRequest {
         return;
       }
 
-      this.sendNotification(media, Notification.MEDIA_PENDING);
+      this.sendNotification(media, Notification.MEDIA_PENDING, intl);
 
       if (this.isAutoRequest) {
-        this.sendNotification(media, Notification.MEDIA_AUTO_REQUESTED);
+        this.sendNotification(media, Notification.MEDIA_AUTO_REQUESTED, intl);
       }
     }
   }
@@ -534,7 +534,7 @@ export class MediaRequest {
    * auto approved content
    */
   @AfterUpdate()
-  public async notifyApprovedOrDeclined(autoApproved = false): Promise<void> {
+  public async notifyApprovedOrDeclined(intl: any, autoApproved = false): Promise<void> {
     if (
       this.status === MediaRequestStatus.APPROVED ||
       this.status === MediaRequestStatus.DECLINED
@@ -566,7 +566,7 @@ export class MediaRequest {
           ? autoApproved
             ? Notification.MEDIA_AUTO_APPROVED
             : Notification.MEDIA_APPROVED
-          : Notification.MEDIA_DECLINED
+          : Notification.MEDIA_DECLINED, intl
       );
 
       if (
@@ -574,13 +574,13 @@ export class MediaRequest {
         autoApproved &&
         this.isAutoRequest
       ) {
-        this.sendNotification(media, Notification.MEDIA_AUTO_REQUESTED);
+        this.sendNotification(media, Notification.MEDIA_AUTO_REQUESTED, intl);
       }
     }
   }
 
   @AfterInsert()
-  public async autoapprovalNotification(): Promise<void> {
+  public async autoapprovalNotification(intl: any): Promise<void> {
     if (this.status === MediaRequestStatus.APPROVED) {
       this.notifyApprovedOrDeclined(true);
     }
@@ -588,7 +588,7 @@ export class MediaRequest {
 
   @AfterUpdate()
   @AfterInsert()
-  public async updateParentStatus(): Promise<void> {
+  public async updateParentStatus(intl: any): Promise<void> {
     const mediaRepository = getRepository(Media);
     const media = await mediaRepository.findOne({
       where: { id: this.media.id },
@@ -653,7 +653,7 @@ export class MediaRequest {
   }
 
   @AfterRemove()
-  public async handleRemoveParentUpdate(): Promise<void> {
+  public async handleRemoveParentUpdate(intl: any): Promise<void> {
     const mediaRepository = getRepository(Media);
     const fullMedia = await mediaRepository.findOneOrFail({
       where: { id: this.media.id },
@@ -677,7 +677,7 @@ export class MediaRequest {
     mediaRepository.save(fullMedia);
   }
 
-  public async sendToRadarr(): Promise<void> {
+  public async sendToRadarr(intl: any): Promise<void> {
     if (
       this.status === MediaRequestStatus.APPROVED &&
       this.type === MediaType.MOVIE
@@ -893,7 +893,7 @@ export class MediaRequest {
               }
             );
 
-            this.sendNotification(media, Notification.MEDIA_FAILED);
+            this.sendNotification(media, Notification.MEDIA_FAILED, intl);
           });
         logger.info('Sent request to Radarr', {
           label: 'Media Request',
@@ -912,7 +912,7 @@ export class MediaRequest {
     }
   }
 
-  public async sendToSonarr(): Promise<void> {
+  public async sendToSonarr(intl: any): Promise<void> {
     if (
       this.status === MediaRequestStatus.APPROVED &&
       this.type === MediaType.TV
@@ -1174,7 +1174,7 @@ export class MediaRequest {
               }
             );
 
-            this.sendNotification(media, Notification.MEDIA_FAILED);
+            this.sendNotification(media, Notification.MEDIA_FAILED, intl);
           });
         logger.info('Sent request to Sonarr', {
           label: 'Media Request',
