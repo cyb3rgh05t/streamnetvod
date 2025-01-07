@@ -147,7 +147,7 @@ export class MediaSubscriber implements EntitySubscriberInterface<Media> {
                 separator: /\s/,
                 omission: '…',
               }),
-              notifyAdmin: false,
+              notifyAdmin: true,
               notifySystem: true,
               notifyUser: request.requestedBy,
               image: `https://image.tmdb.org/t/p/w600_and_h900_bestv2${tv.poster_path}`,

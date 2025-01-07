@@ -1,17 +1,13 @@
-import { IssueStatus, IssueTypeName } from '@server/constants/issue';
-import { getRepository } from '@server/datasource';
-import { User } from '@server/entity/User';
-import type { NotificationAgentDiscord } from '@server/lib/settings';
-import { getSettings, NotificationAgentKey } from '@server/lib/settings';
+import {IssueStatus, IssueTypeName} from '@server/constants/issue';
+import {getRepository} from '@server/datasource';
+import {User} from '@server/entity/User';
+import type { NotificationAgentDiscord} from '@server/lib/settings';
+import {getSettings, NotificationAgentKey} from '@server/lib/settings';
 import logger from '@server/logger';
 import axios from 'axios';
-import {
-  hasNotificationType,
-  Notification,
-  shouldSendAdminNotification,
-} from '..';
-import type { NotificationAgent, NotificationPayload } from './agent';
-import { BaseAgent } from './agent';
+import {hasNotificationType, Notification, shouldSendAdminNotification,} from '..';
+import type {NotificationAgent, NotificationPayload} from './agent';
+import {BaseAgent} from './agent';
 
 enum EmbedColors {
   DEFAULT = 0,
@@ -101,6 +97,7 @@ class DiscordAgent
     }
 
     const settings = getSettings();
+    settings.notifications.agents.discord.types;
 
     return settings.notifications.agents.discord;
   }
@@ -115,11 +112,13 @@ class DiscordAgent
     const fields: Field[] = [];
 
     if (payload.request) {
-      fields.push({
-        name: 'Requested By',
+      if (type !== Notification.MEDIA_AVAILABLE) {
+        fields.push({
         value: payload.request.requestedBy.displayName,
-        inline: true,
-      });
+          name: 'Requested By',
+          inline: true,
+        });
+      }
 
       let status = '';
       switch (type) {
@@ -146,7 +145,7 @@ class DiscordAgent
           break;
       }
 
-      if (status) {
+      if (status  && type !== Notification.MEDIA_AVAILABLE) {
         fields.push({
           name: 'Request Status',
           value: status,
@@ -245,7 +244,7 @@ class DiscordAgent
 
     if (
       !payload.notifySystem ||
-      !hasNotificationType(type, settings.types ?? 0)
+      (type !== Notification.MEDIA_AVAILABLE && !hasNotificationType(type, settings.types ?? 0))
     ) {
       return true;
     }
@@ -292,7 +291,11 @@ class DiscordAgent
         }
       }
 
-      await axios.post(settings.options.webhookUrl, {
+      let webhookUrl = settings.options.webhookUrl;
+      if (type === Notification.MEDIA_AVAILABLE) {
+        webhookUrl = process.env.ALTERNATIVE_DISCORD_HOOK ?? settings.options.webhookUrl;
+      }
+      await axios.post(webhookUrl, {
         username: settings.options.botUsername
           ? settings.options.botUsername
           : getSettings().main.applicationTitle,
