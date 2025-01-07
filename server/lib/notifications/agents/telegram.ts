@@ -117,8 +117,8 @@ class TelegramAgent
       message += `\n\n\*Gemeldet von:\* ${this.escapeText(
         payload.issue.createdBy.displayName
       )}`;
-      message += `\n\*Problemtyp:\* ${IssueTypeName[payload.issue.issueType]}`;
-      message += `\n\*Problemstatus:\* ${
+      message += `\n\*Problem Typ:\* ${IssueTypeName[payload.issue.issueType]}`;
+      message += `\n\*Problem Status:\* ${
         payload.issue.status === IssueStatus.OPEN ? 'Offen' : 'Gelöst'
       }`;
     }
