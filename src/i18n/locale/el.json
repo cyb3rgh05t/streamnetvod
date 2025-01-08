@@ -570,6 +570,7 @@
   "components.UserList.validationEmail": "Πρέπει να δώσεις μια έγκυρη διεύθυνση ηλεκτρονικού ταχυδρομείου",
   "components.UserList.userssaved": "Τα δικαιώματα χρήστη αποθηκεύτηκαν με επιτυχία!",
   "components.UserList.users": "Χρήστες",
+  "components.UserList.searchUsersPlaceholder": "Search Users",
   "components.UserList.userlist": "Λίστα χρηστών",
   "components.UserList.userfail": "Κάτι πήγε στραβά κατά την αποθήκευση των δικαιωμάτων του χρήστη.",
   "components.UserList.userdeleteerror": "Κάτι πήγε στραβά κατά τη διαγραφή του χρήστη.",

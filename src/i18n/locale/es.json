@@ -133,6 +133,7 @@
   "components.UserList.totalrequests": "Solicitudes",
   "components.UserList.role": "Rol",
   "components.UserList.plexuser": "Usuario de Plex",
+  "components.UserList.searchUsersPlaceholder": "Search Users",
   "components.UserList.created": "Unido",
   "components.UserList.admin": "Administrador",
   "components.TvDetails.similar": "Series Similares",

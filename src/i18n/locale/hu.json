@@ -148,6 +148,7 @@
   "components.UserList.validationpasswordminchars": "A jelszó túl rövid; minimum 8 karakter hosszú kell legyen",
   "components.UserList.userssaved": "A felhasználói engedélyeket sikeresen mentette!",
   "components.UserList.userlist": "Felhasználók listája",
+  "components.UserList.searchUsersPlaceholder": "Search Users",
   "components.UserList.userdeleteerror": "Hiba történt a felhasználó törlése közben.",
   "components.UserList.userdeleted": "Felhasználó sikeresen törölve!",
   "components.UserList.usercreatedsuccess": "Felhasználó sikeresen létrehozva!",

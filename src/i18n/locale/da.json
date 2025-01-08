@@ -740,6 +740,7 @@
   "components.TvDetails.watchtrailer": "Se Trailer",
   "components.UserList.accounttype": "Type",
   "components.UserList.admin": "Administrator",
+  "components.UserList.searchUsersPlaceholder": "Search Users",
   "components.UserList.autogeneratepassword": "Generér Automatisk Kodeord",
   "components.UserList.autogeneratepasswordTip": "Email et servergenereret kodeord til brugeren",
   "components.UserList.bulkedit": "Masseredigering",

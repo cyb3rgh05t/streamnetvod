@@ -37,6 +37,7 @@
   "components.UserList.userdeleteerror": "उपयोगकर्ता को हटाते समय कुछ गलत हुआ.",
   "components.UserList.sortDisplayName": "प्रदर्शित होने वाला नाम",
   "components.UserList.sortRequests": "अनुरोध संख्या",
+  "components.UserList.searchUsersPlaceholder": "Search Users",
   "components.UserList.user": "उपयोगकर्ता",
   "components.UserList.password": "पासवर्ड",
   "components.UserList.plexuser": "Plex उपयोगकर्ता",

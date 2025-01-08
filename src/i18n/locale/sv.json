@@ -286,6 +286,7 @@
   "components.MovieDetails.MovieCrew.fullcrew": "Filmteam",
   "components.UserList.userssaved": "Användarbehörigheter sparade!",
   "components.UserList.bulkedit": "Mass-redigering",
+  "components.UserList.searchUsersPlaceholder": "Search Users",
   "components.PermissionEdit.usersDescription": "Bevilja behörighet att hantera användare. Användare med denna behörighet kan inte ändra användare med eller bevilja administratörsbehörighet.",
   "components.PermissionEdit.users": "Hantera Användare",
   "components.PermissionEdit.requestDescription": "Ge tillstånd att skicka förfrågningar för icke-4K-media.",

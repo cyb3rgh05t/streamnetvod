@@ -55,6 +55,7 @@
   "components.UserList.created": "Unito",
   "components.UserList.admin": "Amministratore",
   "components.UserList.role": "Ruolo",
+  "components.UserList.searchUsersPlaceholder": "Search Users",
   "components.UserList.plexuser": "Utente Plex",
   "components.UserList.deleteuser": "Elimina l'utente",
   "components.UserList.userlist": "Elenco utenti",

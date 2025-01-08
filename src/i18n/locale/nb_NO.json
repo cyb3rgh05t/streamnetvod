@@ -144,6 +144,7 @@
   "components.UserList.admin": "Administrator",
   "components.UserList.created": "Opprettet",
   "components.UserList.plexuser": "Plex-bruker",
+  "components.UserList.searchUsersPlaceholder": "Search Users",
   "components.UserList.role": "Rolle",
   "components.UserList.totalrequests": "Forespørsler",
   "components.UserList.user": "Bruker",

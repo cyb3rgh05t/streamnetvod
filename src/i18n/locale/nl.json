@@ -145,6 +145,7 @@
   "components.UserList.created": "Lid geworden",
   "components.UserList.plexuser": "Plex-gebruiker",
   "components.UserList.role": "Rol",
+  "components.UserList.searchUsersPlaceholder": "Search Users",
   "components.UserList.totalrequests": "Verzoeken",
   "components.UserList.user": "Gebruiker",
   "components.UserList.userlist": "Gebruikerslijst",

@@ -635,6 +635,7 @@
   "components.UserList.usercreatedsuccess": "L'usuari s'ha creat correctament!",
   "components.UserList.usercreatedfailed": "S'ha produït un error en crear l'usuari.",
   "components.UserList.user": "Usuari",
+  "components.UserList.searchUsersPlaceholder": "Search Users",
   "components.UserList.totalrequests": "Sol·licituds",
   "components.UserList.sortRequests": "Recompte de sol·licituds",
   "components.UserList.sortDisplayName": "Nom de visualització",

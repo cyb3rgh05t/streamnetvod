@@ -50,6 +50,7 @@
   "components.Settings.menuPlexSettings": "Plex",
   "components.UserList.importfromplexerror": "匯入 Plex 使用者時出了點問題。",
   "components.UserList.importfromplex": "匯入 Plex 使用者",
+  "components.UserList.searchUsersPlaceholder": "Search Users",
   "components.UserList.importedfromplex": "匯入 <strong>{userCount}</strong> 個 Plex 使用者成功！",
   "components.UserList.localuser": "本地使用者",
   "components.UserList.creating": "創建中…",

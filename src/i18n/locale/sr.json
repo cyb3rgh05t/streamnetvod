@@ -27,6 +27,7 @@
   "components.UserList.deleteuser": "Izbriši korisnika",
   "components.UserList.deleteconfirm": "Da li ste sigurni da želite da izbrišete ovog korisnika? Svi njegovi zahtevi će biti trajno izbrisani.",
   "components.UserList.created": "Pridružio",
+  "components.UserList.searchUsersPlaceholder": "Search Users",
   "components.UserList.admin": "Administrator",
   "components.TvDetails.similar": "Slične serije",
   "components.TvDetails.showtype": "Tip serije",

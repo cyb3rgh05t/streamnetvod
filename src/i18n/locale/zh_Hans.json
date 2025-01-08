@@ -21,6 +21,7 @@
   "components.UserList.password": "密码",
   "components.UserList.owner": "所有者",
   "components.UserList.nouserstoimport": "没有要导入的 Plex 用户。",
+  "components.UserList.searchUsersPlaceholder": "Search Users",
   "components.UserList.localuser": "本地用户",
   "components.UserList.localLoginDisabled": "<strong>允许本地登录</strong>的设置目前被禁用。",
   "components.UserList.importfromplexerror": "导入 Plex 用户时出错。",

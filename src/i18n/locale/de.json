@@ -148,6 +148,7 @@
   "components.UserList.totalrequests": "Anfragen",
   "components.UserList.user": "Benutzer",
   "components.UserList.userlist": "Benutzerliste",
+  "components.UserList.searchUsersPlaceholder": "User Suche",
   "pages.oops": "Hoppla",
   "pages.returnHome": "Zur Startseite",
   "components.TvDetails.TvCast.fullseriescast": "Komplette Serien Besetzung",

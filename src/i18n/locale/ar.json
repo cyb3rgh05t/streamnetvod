@@ -855,6 +855,7 @@
   "components.UserList.passwordinfodescription": "ضبط عنوان إرتباط التطبيق وتفعيل تنبيهات الإيميل للسماح بإنشاء كلمات سر تلقائية.",
   "components.UserList.plexuser": "مستخدم بليكس",
   "components.UserList.role": "الدور",
+  "components.UserList.searchUsersPlaceholder": "Search Users",
   "components.UserList.sortCreated": "تاريخ الإنضمام",
   "components.UserList.sortDisplayName": "إسم العرض",
   "components.UserList.sortRequests": "عدد الطلبات",

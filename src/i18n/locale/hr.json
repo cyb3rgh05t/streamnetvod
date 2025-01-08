@@ -422,6 +422,7 @@
   "components.UserList.creating": "Stvaranje …",
   "components.UserList.edituser": "Uredi korisničke dozvole",
   "components.UserList.email": "E-mail adresa",
+  "components.UserList.searchUsersPlaceholder": "Search Users",
   "components.UserList.importedfromplex": "<strong>{userCount}</strong> Plex {userCount, plural, one {korisnik je uspješno uvezen} few {korisnika su uspješno uvezena} other {korisnika su uspješno uvezeni}}!",
   "components.UserList.importfromplex": "Uvezi Plex korisnike",
   "components.UserList.localuser": "Lokalni korisnik",

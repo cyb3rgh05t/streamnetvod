@@ -145,10 +145,12 @@
   "components.UserList.created": "A rejoint",
   "components.UserList.plexuser": "Utilisateur Plex",
   "components.UserList.role": "Rôle",
+  "components.UserList.searchUsersPlaceholder": "Recherche Utilisateurs",
   "components.UserList.totalrequests": "Demandes",
   "components.UserList.user": "Utilisateur",
   "components.UserList.userlist": "Liste des utilisateurs",
   "i18n.approve": "Valider",
+
   "i18n.approved": "Validé",
   "i18n.available": "Disponible",
   "i18n.cancel": "Annuler",

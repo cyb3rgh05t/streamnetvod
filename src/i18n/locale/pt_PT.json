@@ -184,6 +184,7 @@
   "i18n.approve": "Aprovar",
   "components.UserList.validationpasswordminchars": "Palavra-passe muito curta; necessário ter no mínimo 8 caracteres",
   "components.UserList.userlist": "Lista de Utilizadores",
+  "components.UserList.searchUsersPlaceholder": "Search Users",
   "components.UserList.userdeleteerror": "Ocorreu um erro ao eliminar o utilizador.",
   "components.UserList.userdeleted": "Utilizador eliminado com sucesso!",
   "components.UserList.usercreatedsuccess": "Utilizador criado com sucesso!",

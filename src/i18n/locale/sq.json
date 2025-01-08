@@ -688,6 +688,7 @@
   "components.TvDetails.viewfullcrew": "Shiko ekuipazhin e plotë",
   "components.TvDetails.watchtrailer": "Shiko Trailerin",
   "components.UserList.accounttype": "Tipi",
+  "components.UserList.searchUsersPlaceholder": "Search Users",
   "components.UserList.admin": "Administrator",
   "components.UserList.autogeneratepassword": "Gjenero automatikisht fjalëkalimin",
   "components.UserList.autogeneratepasswordTip": "Dërgo një fjalëkalim të gjeneruar nga serveri tek përdoruesi",

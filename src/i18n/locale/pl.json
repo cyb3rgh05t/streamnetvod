@@ -671,6 +671,7 @@
   "components.TvDetails.nextAirDate": "Następna data emisji",
   "components.UserList.bulkedit": "Masowa edycja",
   "components.UserList.create": "Utwórz",
+  "components.UserList.searchUsersPlaceholder": "Search Users",
   "components.UserList.created": "Dołączył",
   "components.UserList.edituser": "Edytuj uprawnienia użytkownika",
   "components.UserList.email": "Adres e-mail",

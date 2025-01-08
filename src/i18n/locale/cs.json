@@ -143,6 +143,7 @@
   "components.UserList.password": "Heslo",
   "components.UserList.owner": "Vlastník",
   "components.UserList.creating": "Vytváření…",
+  "components.UserList.searchUsersPlaceholder": "Search Users",
   "components.UserList.created": "Vytvořeno",
   "components.UserList.create": "Vytvořit",
   "components.UserList.admin": "Admin",

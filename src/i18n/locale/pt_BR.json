@@ -201,6 +201,7 @@
   "components.UserList.userdeleteerror": "Algo deu errado ao remover usuário.",
   "components.UserList.userdeleted": "Usuário removido com sucesso!",
   "components.UserList.user": "Usuário",
+  "components.UserList.searchUsersPlaceholder": "Search Users",
   "components.UserList.totalrequests": "Solicitações",
   "components.UserList.role": "Privilégio",
   "components.UserList.plexuser": "Usuário Plex",

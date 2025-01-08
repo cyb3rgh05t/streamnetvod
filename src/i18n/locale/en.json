@@ -1060,6 +1060,7 @@
   "components.UserList.sortRequests": "Request Count",
   "components.UserList.totalrequests": "Requests",
   "components.UserList.user": "User",
+  "components.UserList.searchUsersPlaceholder": "Search Users",
   "components.UserList.usercreatedfailed": "Something went wrong while creating the user.",
   "components.UserList.usercreatedfailedexisting": "The provided email address is already in use by another user.",
   "components.UserList.usercreatedsuccess": "User created successfully!",
