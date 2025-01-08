@@ -65,7 +65,7 @@ class PlexOAuth {
       'X-Plex-Platform': browser.getBrowserName(),
       'X-Plex-Platform-Version': browser.getBrowserVersion(),
       'X-Plex-Device': browser.getOSName(),
-      'X-Plex-Device-Name': `${browser.getBrowserName()} (Overseerr)`,
+      'X-Plex-Device-Name': `${browser.getBrowserName()} (StreamNet VOD)`,
       'X-Plex-Device-Screen-Resolution':
         window.screen.width + 'x' + window.screen.height,
       'X-Plex-Language': 'en',

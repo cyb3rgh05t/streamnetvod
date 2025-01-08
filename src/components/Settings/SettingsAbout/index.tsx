@@ -16,7 +16,7 @@ import useSWR from 'swr';
 
 const messages = defineMessages({
   about: 'About',
-  overseerrinformation: 'About Overseerr',
+  overseerrinformation: 'About StreamNet VOD',
   version: 'Version',
   totalmedia: 'Total Media',
   totalrequests: 'Total Requests',
@@ -24,7 +24,7 @@ const messages = defineMessages({
   githubdiscussions: 'GitHub Discussions',
   timezone: 'Time Zone',
   appDataPath: 'Data Directory',
-  supportoverseerr: 'Support Overseerr',
+  supportoverseerr: 'Support StreamNet VOD',
   helppaycoffee: 'Help Pay for Coffee',
   documentation: 'Documentation',
   preferredmethod: 'Preferred',
@@ -33,7 +33,7 @@ const messages = defineMessages({
   betawarning:
     'This is BETA software. Features may be broken and/or unstable. Please report any issues on GitHub!',
   runningDevelop:
-    'You are running the <code>develop</code> branch of Overseerr, which is only recommended for those contributing to development or assisting with bleeding-edge testing.',
+    'You are running the <code>develop</code> branch of StreamNet VOD, which is only recommended for those contributing to development or assisting with bleeding-edge testing.',
 });
 
 const SettingsAbout = () => {

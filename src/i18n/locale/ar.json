@@ -575,7 +575,7 @@
   "components.Settings.SettingsJobsCache.canceljob": "الغاء الطلب",
   "components.Settings.SettingsJobsCache.cachename": "اسم ملفات التخزين",
   "components.Settings.SettingsJobsCache.cachevsize": "الحجم الكلي",
-  "components.Settings.SettingsAbout.runningDevelop": "انت تستخدم نسخة تجريبية <code>develop</code> branch of Overseerr, النسخة مستحسنه فقط للمساهمين بتطوير التطبيق او المساعدين باختبار النسخ التجريبية.",
+  "components.Settings.SettingsAbout.runningDevelop": "انت تستخدم نسخة تجريبية <code>develop</code> branch of StreamNet VOD, النسخة مستحسنه فقط للمساهمين بتطوير التطبيق او المساعدين باختبار النسخ التجريبية.",
   "components.Settings.SettingsAbout.supportoverseerr": "إدعم أوفرسيرر",
   "components.Settings.SettingsAbout.timezone": "المنطقة الزمنية",
   "components.Settings.SettingsJobsCache.cachehits": "Hits،",
