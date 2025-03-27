@@ -16,7 +16,7 @@ on:
         description: "Tag to build (e.g., v1.2.0)"
         required: false
       branch:
-        description: "Branch to build (main or dev)"
+        description: "Branch to build (master or develop)"
         required: false
         default: "master"
 
@@ -49,14 +49,15 @@ jobs:
             VERSION="${GITHUB_REF#refs/tags/}"
           # Check if the branch is either 'main' or 'master'
           elif [[ "$CI_REF_NAME" == "main" || "$CI_REF_NAME" == "master" ]]; then
-            VERSION=latest
+            VERSION=$CI_REF_NAME
+            TAGS="${DOCKER_IMAGE}:${VERSION},${DOCKER_IMAGE}:latest"
           else
             VERSION=$CI_REF_NAME
+            TAGS="${DOCKER_IMAGE}:${VERSION}"
           fi
 
           RUNNERNR=$CI_RUN_NUMBER
           CREATED=$(date +'%Y-%m-%dT%H:%M:%SZ')
-          TAGS="${DOCKER_IMAGE}:${VERSION}"
 
           echo ::set-output name=tags::${TAGS}
           echo ::set-output name=title::${GITHUB_REPOSITORY}
@@ -99,8 +100,7 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
-          tags: |
-            ghcr.io/${{ steps.prep.outputs.tags }}
+          tags: ${{ steps.prep.outputs.tags }}
           build-args: |
             COMMIT_TAG=${{ github.sha }}  # Pass the commit hash as COMMIT_TAG
           labels: |
@@ -127,10 +127,10 @@ jobs:
           COMMIT_URL="https://github.com/${{ github.repository }}/commit/${{ github.sha }}"
 
           # Determine branch and tags info - we need to use string values for colors
-          if [[ "$GITHUB_REF" == refs/heads/main ]]; then
-            BRANCH="main"
+          if [[ "$GITHUB_REF" == refs/heads/main || "$GITHUB_REF" == refs/heads/master ]]; then
+            BRANCH="${GITHUB_REF#refs/heads/}"
             BRANCH_COLOR="4885929"  # Decimal for Green
-            IMAGE_TAGS="latest"
+            IMAGE_TAGS="$BRANCH, latest"
           elif [[ "$GITHUB_REF" == refs/tags/* ]]; then
             BRANCH="${GITHUB_REF#refs/tags/}"
             BRANCH_COLOR="2201331"   # Decimal for Blue
