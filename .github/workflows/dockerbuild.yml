@@ -100,7 +100,7 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
-          tags: ${{ steps.prep.outputs.tags }}
+          tags: ghcr.io/${{ steps.prep.outputs.tags }}
           build-args: |
             COMMIT_TAG=${{ github.sha }}  # Pass the commit hash as COMMIT_TAG
           labels: |
