@@ -3,10 +3,22 @@ on:
   push:
     branches-ignore:
       - 'dependabot/**'
+    tags:
+      - "v*" # Automatically triggers on new version tags (v1.2.0, etc.)
     paths-ignore:
       - ".github/**"
       - "LICENSE"
       - "**.md"
+
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag to build (e.g., v1.2.0)"
+        required: false
+      branch:
+        description: "Branch to build (main or dev)"
+        required: false
+        default: "main"
 
 jobs:
   GHRC:
@@ -27,11 +39,19 @@ jobs:
           REPO=$CI_REPOSITORY_NAME
           DOCKER_IMAGE=${{ github.repository_owner }}/${REPO}
 
+          # Check for workflow_dispatch with inputs first
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" && -n "${{ github.event.inputs.tag }}" ]]; then
+            VERSION="${{ github.event.inputs.tag }}"
+          elif [[ "${{ github.event_name }}" == "workflow_dispatch" && -n "${{ github.event.inputs.branch }}" ]]; then
+            VERSION="${{ github.event.inputs.branch }}"
+          # Check if it's a tag that starts with 'v'
+          elif [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+            VERSION="${GITHUB_REF#refs/tags/}"
           # Check if the branch is either 'main' or 'master'
-          if [[ "$CI_REF_NAME" == "main" || "$CI_REF_NAME" == "master" ]]; then
+          elif [[ "$CI_REF_NAME" == "main" || "$CI_REF_NAME" == "master" ]]; then
             VERSION=latest
           else
-           VERSION=$CI_REF_NAME
+            VERSION=$CI_REF_NAME
           fi
 
           RUNNERNR=$CI_RUN_NUMBER
@@ -96,35 +116,73 @@ jobs:
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
 
-      - name: Send Discord Notification
-        if: success()  # This step will only run if the build is successful
+      - name: Send Enhanced Discord Notification
+        if: success()
         run: |
-          curl -X POST \
+          # Get short SHA - fix the variable capture
+          SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
+
+          # Create commit link properly formatted for the Discord notification
+          COMMIT_LINK="\`${SHORT_SHA}\`"
+          COMMIT_URL="https://github.com/${{ github.repository }}/commit/${{ github.sha }}"
+
+          # Determine branch and tags info - we need to use string values for colors
+          if [[ "$GITHUB_REF" == refs/heads/main ]]; then
+            BRANCH="main"
+            BRANCH_COLOR="4885929"  # Decimal for Green
+            IMAGE_TAGS="latest"
+          elif [[ "$GITHUB_REF" == refs/tags/* ]]; then
+            BRANCH="${GITHUB_REF#refs/tags/}"
+            BRANCH_COLOR="2201331"   # Decimal for Blue
+            IMAGE_TAGS="${BRANCH}"
+          else
+            BRANCH="${GITHUB_REF#refs/heads/}"
+            BRANCH_COLOR="10233776"  # Decimal for Purple
+            IMAGE_TAGS="${{ steps.prep.outputs.version }}"
+          fi
+
+          # Create a simpler JSON payload with less string manipulation in jq
+          cat > discord-payload.json << EOF
+          {
+            "embeds": [{
+              "title": "🚀 Docker Build Success: ${{ github.repository }}",
+              "color": $BRANCH_COLOR,
+              "description": "A new Docker image has been built and pushed to the container registry.",
+              "fields": [
+                {
+                  "name": "🔖 Branch/Tag",
+                  "value": "$BRANCH",
+                  "inline": true
+                },
+                {
+                  "name": "🧠 Commit",
+                  "value": "[\`$SHORT_SHA\`]($COMMIT_URL)",
+                  "inline": true
+                },
+                {
+                  "name": "🏙️ Image",
+                  "value": "ghcr.io/${{ github.repository }}",
+                  "inline": false
+                },
+                {
+                  "name": "📋 Tags",
+                  "value": "$IMAGE_TAGS",
+                  "inline": false
+                }
+              ],
+              "thumbnail": {
+                "url": "https://github.com/cyb3rgh05t/streamnetvod/blob/master/public/apple-icon.png?raw=true"
+              },
+              "footer": {
+                "text": "Built with ❤️ by cyb3rgh05t",
+                "icon_url": "https://github.com/${{ github.repository_owner }}.png"
+              },
+              "timestamp": "$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+            }]
+          }
+          EOF
+
+          # Send the webhook
+          curl -X POST ${{ secrets.DISCORD_WEBHOOK }} \
             -H "Content-Type: application/json" \
-            -d '{
-                  "content": "🚀 Docker build and push completed successfully!",
-                  "embeds": [
-                    {
-                      "title": "Build Details",
-                      "description": "The Docker image has been built and pushed.",
-                      "fields": [
-                        {
-                          "name": "Commit Hash",
-                          "value": "${{ github.sha }}",
-                          "inline": true
-                        },
-                        {
-                          "name": "Version",
-                          "value": "${{ steps.prep.outputs.version }}",
-                          "inline": true
-                        },
-                        {
-                          "name": "Repository",
-                          "value": "${{ github.repository }}",
-                          "inline": true
-                        }
-                      ]
-                    }
-                  ]
-                }' \
-            ${{ secrets.DISCORD_WEBHOOK }}
+            -d @discord-payload.json
