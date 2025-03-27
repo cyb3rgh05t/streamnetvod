@@ -218,7 +218,7 @@ const NotificationsTelegram = () => {
                     as="field"
                     id="botAPI"
                     name="botAPI"
-                    autoComplete="one-time-code"
+                    type="text"
                   />
                 </div>
                 {errors.botAPI &&
@@ -237,7 +237,15 @@ const NotificationsTelegram = () => {
               </label>
               <div className="form-input-area">
                 <div className="form-input-field">
-                  <Field id="botUsername" name="botUsername" type="text" />
+                  <Field
+                    id="botUsername"
+                    name="botUsername"
+                    type="text"
+                    autoComplete="off"
+                    data-1pignore="true"
+                    data-lpignore="true"
+                    data-bwignore="true"
+                  />
                 </div>
                 {errors.botUsername &&
                   touched.botUsername &&
@@ -267,7 +275,15 @@ const NotificationsTelegram = () => {
               </label>
               <div className="form-input-area">
                 <div className="form-input-field">
-                  <Field id="chatId" name="chatId" type="text" />
+                  <Field
+                    id="chatId"
+                    name="chatId"
+                    type="text"
+                    autoComplete="off"
+                    data-1pignore="true"
+                    data-lpignore="true"
+                    data-bwignore="true"
+                  />
                 </div>
                 {errors.chatId &&
                   touched.chatId &&

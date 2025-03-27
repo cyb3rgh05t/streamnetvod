@@ -81,6 +81,7 @@ const globalMessages = defineMessages({
   movierequestavail: 'Movie Request Now Available',
   serierequestavail: 'Series Request Now Available',
   tmdblang: 'en',
+  specials: 'Specials',
 });
 
 export default globalMessages;
