@@ -50,14 +50,22 @@ jobs:
           # Check if the branch is either 'main' or 'master'
           elif [[ "$CI_REF_NAME" == "main" || "$CI_REF_NAME" == "master" ]]; then
             VERSION=$CI_REF_NAME
-            TAGS="${DOCKER_IMAGE}:${VERSION},${DOCKER_IMAGE}:latest"
+            # For main/master, we'll add both tags in the tags array
           else
             VERSION=$CI_REF_NAME
-            TAGS="${DOCKER_IMAGE}:${VERSION}"
           fi
 
           RUNNERNR=$CI_RUN_NUMBER
           CREATED=$(date +'%Y-%m-%dT%H:%M:%SZ')
+
+          # Set tags based on branch/tag
+          if [[ "$CI_REF_NAME" == "main" || "$CI_REF_NAME" == "master" ]]; then
+            TAGS="${DOCKER_IMAGE}:${VERSION}"
+            LATEST_TAG="${DOCKER_IMAGE}:latest"
+          else
+            TAGS="${DOCKER_IMAGE}:${VERSION}"
+            LATEST_TAG=""
+          fi
 
           echo ::set-output name=tags::${TAGS}
           echo ::set-output name=title::${GITHUB_REPOSITORY}
@@ -100,7 +108,9 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
-          tags: ghcr.io/${{ steps.prep.outputs.tags }}
+          tags: |
+            ghcr.io/${{ steps.prep.outputs.tags }}
+            ${{ (steps.prep.outputs.version == 'main' || steps.prep.outputs.version == 'master') && format('ghcr.io/{0}/{1}:latest', github.repository_owner, env.CI_REPOSITORY_NAME) || '' }}
           build-args: |
             COMMIT_TAG=${{ github.sha }}  # Pass the commit hash as COMMIT_TAG
           labels: |
@@ -171,7 +181,7 @@ jobs:
                 }
               ],
               "thumbnail": {
-                "url": "https://github.com/cyb3rgh05t/streamnetvod/blob/master/public/apple-icon.png?raw=true"
+              "url": "https://github.com/cyb3rgh05t/streamnetvod/blob/master/public/apple-icon.png?raw=true"
               },
               "footer": {
                 "text": "Built with ❤️ by cyb3rgh05t",
