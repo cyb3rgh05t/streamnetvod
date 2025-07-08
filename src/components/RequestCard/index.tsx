@@ -384,7 +384,8 @@ const RequestCard = ({ request, onTitleData }: RequestCardProps) => {
               <span className="mr-2 font-bold ">
                 {intl.formatMessage(messages.seasons, {
                   seasonCount:
-                    title.seasons.length === request.seasons.length
+                    title.seasons.filter((season) => season.seasonNumber !== 0)
+                      .length === request.seasons.length
                       ? 0
                       : request.seasons.length,
                 })}
@@ -392,11 +393,7 @@ const RequestCard = ({ request, onTitleData }: RequestCardProps) => {
               <div className="hide-scrollbar overflow-x-scroll">
                 {request.seasons.map((season) => (
                   <span key={`season-${season.id}`} className="mr-2">
-                    <Badge>
-                      {season.seasonNumber === 0
-                        ? intl.formatMessage(globalMessages.specials)
-                        : season.seasonNumber}
-                    </Badge>
+                    <Badge>{season.seasonNumber}</Badge>
                   </span>
                 ))}
               </div>

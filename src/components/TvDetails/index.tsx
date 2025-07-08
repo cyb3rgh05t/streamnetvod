@@ -262,13 +262,9 @@ const TvDetails = ({ tv }: TvDetailsProps) => {
     (season) => season.seasonNumber === 0
   );
 
-  const isComplete =
-    (showHasSpecials ? seasonCount + 1 : seasonCount) <=
-    getAllRequestedSeasons(false).length;
+  const isComplete = seasonCount <= getAllRequestedSeasons(false).length;
 
-  const is4kComplete =
-    (showHasSpecials ? seasonCount + 1 : seasonCount) <=
-    getAllRequestedSeasons(true).length;
+  const is4kComplete = seasonCount <= getAllRequestedSeasons(true).length;
 
   const streamingProviders =
     data?.watchProviders?.find((provider) => provider.iso_3166_1 === region)
@@ -531,6 +527,7 @@ const TvDetails = ({ tv }: TvDetailsProps) => {
             {data.seasons
               .slice()
               .reverse()
+              .filter((season) => season.seasonNumber !== 0)
               .map((season) => {
                 const show4k =
                   settings.currentSettings.series4kEnabled &&
@@ -584,11 +581,9 @@ const TvDetails = ({ tv }: TvDetailsProps) => {
                         >
                           <div className="flex flex-1 items-center space-x-2 text-lg">
                             <span>
-                              {season.seasonNumber === 0
-                                ? intl.formatMessage(globalMessages.specials)
-                                : intl.formatMessage(messages.seasonnumber, {
-                                    seasonNumber: season.seasonNumber,
-                                  })}
+                              {intl.formatMessage(messages.seasonnumber, {
+                                seasonNumber: season.seasonNumber,
+                              })}
                             </span>
                             <Badge badgeType="dark">
                               {intl.formatMessage(messages.episodeCount, {

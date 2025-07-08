@@ -246,11 +246,7 @@ const RequestBlock = ({ request, onUpdate }: RequestBlockProps) => {
                   key={`season-${season.id}`}
                   className="mb-1 mr-2 inline-block"
                 >
-                  <Badge>
-                    {season.seasonNumber === 0
-                      ? intl.formatMessage(globalMessages.specials)
-                      : season.seasonNumber}
-                  </Badge>
+                  <Badge>{season.seasonNumber}</Badge>
                 </span>
               ))}
             </div>
