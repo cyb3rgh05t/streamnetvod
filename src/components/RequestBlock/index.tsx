@@ -36,6 +36,7 @@ const messages = defineMessages({
   decline: 'Decline Request',
   edit: 'Edit Request',
   delete: 'Delete Request',
+  extras: 'Specials',
 });
 
 interface RequestBlockProps {

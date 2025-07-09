@@ -40,6 +40,7 @@ const messages = defineMessages({
   cancelrequest: 'Cancel Request',
   deleterequest: 'Delete Request',
   unknowntitle: 'Unknown Title',
+  extras: 'Specials',
 });
 
 const isMovie = (movie: MovieDetails | TvDetails): movie is MovieDetails => {

@@ -41,6 +41,7 @@ const messages = defineMessages({
   tmdbid: 'TMDB ID',
   tvdbid: 'TheTVDB ID',
   unknowntitle: 'Unknown Title',
+  extras: 'Specials',
 });
 
 const isMovie = (movie: MovieDetails | TvDetails): movie is MovieDetails => {

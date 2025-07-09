@@ -86,6 +86,7 @@ const messages = defineMessages({
   rtcriticsscore: 'Rotten Tomatoes Tomatometer',
   rtaudiencescore: 'Rotten Tomatoes Audience Score',
   tmdbuserscore: 'TMDB User Score',
+  extras: 'Specials',
 });
 
 interface TvDetailsProps {
