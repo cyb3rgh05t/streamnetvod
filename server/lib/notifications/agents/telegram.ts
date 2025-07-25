@@ -18,8 +18,8 @@ interface TelegramMessagePayload {
   text: string;
   parse_mode: string;
   chat_id: string;
-  message_thread_id: string;
   disable_notification: boolean;
+  message_thread_id?: number;
 }
 
 interface TelegramPhotoPayload {
@@ -27,8 +27,8 @@ interface TelegramPhotoPayload {
   caption: string;
   parse_mode: string;
   chat_id: string;
-  message_thread_id: string;
   disable_notification: boolean;
+  message_thread_id?: number;
 }
 
 class TelegramAgent
@@ -50,15 +50,17 @@ class TelegramAgent
   public shouldSend(): boolean {
     const settings = this.getSettings();
 
-    if (settings.enabled && settings.options.botAPI) {
-      return true;
-    }
-
-    return false;
+    return !!(settings.enabled && settings.options.botAPI);
   }
 
   private escapeText(text: string | undefined): string {
-    return text ? text.replace(/[_*[\]()~>#+=|{}.!-]/gi, (x) => '\\' + x) : '';
+    return text ? text.replace(/[_*\[\]()~>#+=|{}.!-]/gi, (x) => '\\' + x) : '';
+  }
+
+  private truncateCaption(caption: string, maxLength = 1024): string {
+    return caption.length > maxLength
+      ? caption.substring(0, maxLength - 3) + '...'
+      : caption;
   }
 
   private getNotificationPayload(
@@ -67,16 +69,16 @@ class TelegramAgent
   ): Partial<TelegramMessagePayload | TelegramPhotoPayload> {
     const { applicationUrl, applicationTitle } = getSettings().main;
 
-    /* eslint-disable no-useless-escape */
-    let message = `\*${this.escapeText(
+    let message = `*${this.escapeText(
       payload.event ? `${payload.event} - ${payload.subject}` : payload.subject
-    )}\*`;
+    )}*`;
+
     if (payload.message) {
       message += `\n${this.escapeText(payload.message)}`;
     }
 
     if (payload.request) {
-      message += `\n\n\*Angefragt von:\* ${this.escapeText(
+      message += `\n\n*Requested By:* ${this.escapeText(
         payload.request?.requestedBy.displayName
       )}`;
 
@@ -89,42 +91,42 @@ class TelegramAgent
               : 'Processing';
           break;
         case Notification.MEDIA_PENDING:
-          status = 'Ausstehende Genehmigung';
+          status = 'Pending Approval';
           break;
         case Notification.MEDIA_APPROVED:
         case Notification.MEDIA_AUTO_APPROVED:
-          status = 'In Bearbeitung';
+          status = 'Processing';
           break;
         case Notification.MEDIA_AVAILABLE:
-          status = 'Verfügbar';
+          status = 'Available';
           break;
         case Notification.MEDIA_DECLINED:
-          status = 'Abgelehnt';
+          status = 'Declined';
           break;
         case Notification.MEDIA_FAILED:
-          status = 'Fehlgeschlagen';
+          status = 'Failed';
           break;
       }
 
       if (status) {
-        message += `\n\*Anfrage Status:\* ${status}`;
+        message += `\n*Request Status:* ${status}`;
       }
     } else if (payload.comment) {
-      message += `\n\n\*Kommentar von ${this.escapeText(
+      message += `\n\n*Comment from ${this.escapeText(
         payload.comment.user.displayName
-      )}:\* ${this.escapeText(payload.comment.message)}`;
+      )}:* ${this.escapeText(payload.comment.message)}`;
     } else if (payload.issue) {
-      message += `\n\n\*Gemeldet von:\* ${this.escapeText(
+      message += `\n\n*Reported By:* ${this.escapeText(
         payload.issue.createdBy.displayName
       )}`;
-      message += `\n\*Problem Typ:\* ${IssueTypeName[payload.issue.issueType]}`;
-      message += `\n\*Problem Status:\* ${
-        payload.issue.status === IssueStatus.OPEN ? 'Offen' : 'Gelöst'
+      message += `\n*Issue Type:* ${IssueTypeName[payload.issue.issueType]}`;
+      message += `\n*Issue Status:* ${
+        payload.issue.status === IssueStatus.OPEN ? 'Open' : 'Resolved'
       }`;
     }
 
     for (const extra of payload.extra ?? []) {
-      message += `\n\*${extra.name}:\* ${extra.value}`;
+      message += `\n*${extra.name}:* ${extra.value}`;
     }
 
     const url = applicationUrl
@@ -136,16 +138,15 @@ class TelegramAgent
       : undefined;
 
     if (url) {
-      message += `\n\n\[View ${
+      message += `\n\n[View ${
         payload.issue ? 'Issue' : 'Media'
-      } in ${this.escapeText(applicationTitle)}\]\(${url}\)`;
+      } in ${this.escapeText(applicationTitle)}](${url})`;
     }
-    /* eslint-enable */
 
     return payload.image
       ? {
           photo: payload.image,
-          caption: message,
+          caption: this.truncateCaption(message),
           parse_mode: 'MarkdownV2',
         }
       : {
@@ -159,31 +160,21 @@ class TelegramAgent
     payload: NotificationPayload
   ): Promise<boolean> {
     const settings = this.getSettings();
-    const endpoint = `${this.baseUrl}bot${settings.options.botAPI}/${
+    const endpoint = `${this.baseUrl}bot${settings.options.botAPI}/$${
       payload.image ? 'sendPhoto' : 'sendMessage'
     }`;
     const notificationPayload = this.getNotificationPayload(type, payload);
 
-    // Send system notification
-    if (
-      payload.notifySystem &&
-      hasNotificationType(type, settings.types ?? 0) &&
-      settings.options.chatId
-    ) {
-      logger.debug('Sending Telegram notification', {
-        label: 'Notifications',
-        type: Notification[type],
-        subject: payload.subject,
-      });
-
+    const sendTelegram = async (chatId: string, silent: boolean, threadId?: number) => {
       try {
         await axios.post(endpoint, {
           ...notificationPayload,
-          chat_id: settings.options.chatId,
-		  message_thread_id: settings.options.messageThreadId,
-          disable_notification: !!settings.options.sendSilently,
+          chat_id: chatId,
+          disable_notification: silent,
+          ...(threadId ? { message_thread_id: threadId } : {}),
         } as TelegramMessagePayload | TelegramPhotoPayload);
-      } catch (e) {
+        return true;
+      } catch (e: any) {
         logger.error('Error sending Telegram notification', {
           label: 'Notifications',
           type: Notification[type],
@@ -191,46 +182,36 @@ class TelegramAgent
           errorMessage: e.message,
           response: e.response?.data,
         });
-
         return false;
       }
+    };
+
+    if (
+      payload.notifySystem &&
+      hasNotificationType(type, settings.types ?? 0) &&
+      settings.options.chatId
+    ) {
+      await sendTelegram(
+        settings.options.chatId,
+        !!settings.options.sendSilently,
+        settings.options.messageThreadId ? Number(settings.options.messageThreadId) : undefined
+      );
     }
 
     if (payload.notifyUser) {
+      const userSettings = payload.notifyUser.settings;
       if (
-        payload.notifyUser.settings?.hasNotificationType(
-          NotificationAgentKey.TELEGRAM,
-          type
-        ) &&
-        payload.notifyUser.settings?.telegramChatId &&
-        payload.notifyUser.settings.telegramChatId !== settings.options.chatId
+        userSettings?.hasNotificationType(NotificationAgentKey.TELEGRAM, type) &&
+        userSettings.telegramChatId &&
+        userSettings.telegramChatId !== settings.options.chatId
       ) {
-        logger.debug('Sending Telegram notification', {
-          label: 'Notifications',
-          recipient: payload.notifyUser.displayName,
-          type: Notification[type],
-          subject: payload.subject,
-        });
-
-        try {
-          await axios.post(endpoint, {
-            ...notificationPayload,
-            chat_id: payload.notifyUser.settings.telegramChatId,
-            disable_notification:
-              !!payload.notifyUser.settings.telegramSendSilently,
-          } as TelegramMessagePayload | TelegramPhotoPayload);
-        } catch (e) {
-          logger.error('Error sending Telegram notification', {
-            label: 'Notifications',
-            recipient: payload.notifyUser.displayName,
-            type: Notification[type],
-            subject: payload.subject,
-            errorMessage: e.message,
-            response: e.response?.data,
-          });
-
-          return false;
-        }
+        await sendTelegram(
+          userSettings.telegramChatId,
+          !!userSettings.telegramSendSilently,
+          userSettings.telegramMessageThreadId
+            ? Number(userSettings.telegramMessageThreadId)
+            : undefined
+        );
       }
     }
 
@@ -242,42 +223,23 @@ class TelegramAgent
         users
           .filter(
             (user) =>
-              user.settings?.hasNotificationType(
-                NotificationAgentKey.TELEGRAM,
-                type
-              ) && shouldSendAdminNotification(type, user, payload)
+              user.settings?.hasNotificationType(NotificationAgentKey.TELEGRAM, type) &&
+              shouldSendAdminNotification(type, user, payload)
           )
-          .map(async (user) => {
+          .map((user) => {
             if (
               user.settings?.telegramChatId &&
               user.settings.telegramChatId !== settings.options.chatId
             ) {
-              logger.debug('Sending Telegram notification', {
-                label: 'Notifications',
-                recipient: user.displayName,
-                type: Notification[type],
-                subject: payload.subject,
-              });
-
-              try {
-                await axios.post(endpoint, {
-                  ...notificationPayload,
-                  chat_id: user.settings.telegramChatId,
-                  disable_notification: !!user.settings?.telegramSendSilently,
-                } as TelegramMessagePayload | TelegramPhotoPayload);
-              } catch (e) {
-                logger.error('Error sending Telegram notification', {
-                  label: 'Notifications',
-                  recipient: user.displayName,
-                  type: Notification[type],
-                  subject: payload.subject,
-                  errorMessage: e.message,
-                  response: e.response?.data,
-                });
-
-                return false;
-              }
+              return sendTelegram(
+                user.settings.telegramChatId,
+                !!user.settings.telegramSendSilently,
+                user.settings.telegramMessageThreadId
+                  ? Number(user.settings.telegramMessageThreadId)
+                  : undefined
+              );
             }
+            return Promise.resolve(true);
           })
       );
     }
