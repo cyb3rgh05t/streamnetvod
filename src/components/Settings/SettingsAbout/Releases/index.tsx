@@ -27,8 +27,8 @@ const messages = defineMessages({
   viewchangelog: 'View Changelog',
 });
 
-const REPO_RELEASE_API =
-  'https://api.github.com/repos/sct/overseerr/releases?per_page=20';
+const GITHUB_RELEASES_API_URL =
+  'https://api.github.com/repos/cyb3rgh05t/streamnetvod/releases?per_page=20';
 
 interface GitHubRelease {
   url: string;

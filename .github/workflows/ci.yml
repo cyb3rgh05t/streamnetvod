@@ -62,8 +62,8 @@ jobs:
           tags: |
             sctx/overseerr:develop
             sctx/overseerr:${{ github.sha }}
-            ghcr.io/sct/overseerr:develop
-            ghcr.io/sct/overseerr:${{ github.sha }}
+            ghcr.io/cyb3rgh05t/streamnetvod:develop
+            ghcr.io/cyb3rgh05t/streamnetvod:${{ github.sha }}
 
   discord:
     name: Send Discord Notification

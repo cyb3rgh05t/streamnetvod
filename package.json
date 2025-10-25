@@ -1,6 +1,6 @@
 {
   "name": "overseerr",
-  "version": "1.34.3",
+  "version": "1.35.0",
   "private": true,
   "scripts": {
     "dev": "nodemon -e ts --watch server --watch overseerr-api.yml -e .json,.ts,.yml -x ts-node -r tsconfig-paths/register --files --project server/tsconfig.json server/index.ts",
@@ -25,7 +25,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/sct/overseerr.git"
+    "url": "https://github.com/cyb3rgh05t/streamnetvod.git"
   },
   "license": "MIT",
   "dependencies": {
@@ -233,7 +233,7 @@
         },
         "imageNames": [
           "sctx/overseerr",
-          "ghcr.io/sct/overseerr"
+          "ghcr.io/cyb3rgh05t/streamnetvod"
         ],
         "platforms": [
           "linux/amd64",
