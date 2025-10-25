@@ -229,6 +229,54 @@
     color: var(--text) !important;
   }
 
+  /* Override ALL indigo/purple colors with theme accent color */
+  [class*='bg-indigo-']:not(.text-indigo-100),
+  [class*='bg-purple-'] {
+    background-color: rgb(var(--accent-color), 0.5) !important;
+  }
+
+  [class*='text-indigo-']:not(.text-indigo-100),
+  [class*='text-purple-'] {
+    color: rgb(var(--accent-color)) !important;
+  }
+
+  [class*='border-indigo-'],
+  [class*='border-purple-'] {
+    border-color: rgb(var(--accent-color)) !important;
+  }
+
+  [class*='ring-indigo-'],
+  [class*='ring-purple-'] {
+    --tw-ring-color: rgb(var(--accent-color)) !important;
+  }
+
+  /* Hover states */
+  [class*='hover:bg-indigo-']:hover,
+  [class*='hover:bg-purple-']:hover {
+    background-color: rgb(var(--accent-color), 0.7) !important;
+  }
+
+  [class*='hover:text-indigo-']:hover,
+  [class*='hover:text-purple-']:hover {
+    color: rgb(var(--accent-color)) !important;
+  }
+
+  [class*='hover:border-indigo-']:hover,
+  [class*='hover:border-purple-']:hover {
+    border-color: rgb(var(--accent-color)) !important;
+  }
+
+  /* Focus states */
+  [class*='focus:ring-indigo-']:focus,
+  [class*='focus:ring-purple-']:focus {
+    --tw-ring-color: rgb(var(--accent-color)) !important;
+  }
+
+  [class*='focus:border-indigo-']:focus,
+  [class*='focus:border-purple-']:focus {
+    border-color: rgb(var(--accent-color)) !important;
+  }
+
   /* Links */
   .media-fact-value a,
   .media-fact-value button,
@@ -458,6 +506,33 @@
     background-color: rgba(var(--accent-color), var(--tw-bg-opacity));
   }
 
+  .bg-indigo-700 {
+    background-color: var(--button-color) !important;
+  }
+
+  .text-indigo-500 {
+    color: rgb(var(--accent-color)) !important;
+  }
+
+  .border-indigo-600 {
+    border-color: rgb(var(--accent-color)) !important;
+  }
+
+  /* Active tab styling */
+  #__next
+    > div
+    > div.relative.flex.flex-col.flex-1.w-0.min-w-0.mb-16.lg\:ml-64
+    > main
+    > div
+    > div
+    > div.mt-6
+    > div.hidden.overflow-x-scroll.border-b.border-gray-600.sm\:block.hide-scrollbar
+    > nav
+    > a.px-1.py-4.ml-8.text-sm.font-medium.leading-5.transition.duration-300.border-b-2.border-transparent.whitespace-nowrap.first\:ml-0.text-indigo-500.border-indigo-600 {
+    border-color: rgb(var(--accent-color)) !important;
+    color: rgb(var(--accent-color)) !important;
+  }
+
   .focus\:ring:focus {
     --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0
       var(--tw-ring-offset-width) var(--tw-ring-offset-color);
@@ -571,6 +646,18 @@
 
   [role='menuitem']:hover {
     background: rgb(var(--accent-color), 0.3);
+  }
+
+  /* Loader/Progress Bar */
+  body
+    > div.fixed.top-0.left-0.z-50.w-full.transition-opacity.ease-out.duration-400.opacity-0
+    > div {
+    --tw-bg-opacity: 1;
+    background-color: rgb(var(--accent-color));
+  }
+
+  .bg-indigo-400 {
+    background-color: rgb(var(--accent-color)) !important;
   }
 
   /* TOP GRADIENT - Remove blue tint */
