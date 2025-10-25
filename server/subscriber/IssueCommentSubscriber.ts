@@ -67,11 +67,6 @@ export class IssueCommentSubscriber
 
       const [firstComment] = sortBy(issue.comments, 'id');
 
-      // If the comment has an attachment, use it instead of the movie/TV poster
-      if (entity.attachmentPath) {
-        image = `${applicationUrl}${entity.attachmentPath}`;
-      }
-
       if (entity.id !== firstComment.id) {
         // Send notifications to all issue managers
         notificationManager.sendNotification(Notification.ISSUE_COMMENT, {
@@ -81,7 +76,7 @@ export class IssueCommentSubscriber
               : ''
           }Problem`,
           subject: title,
-          message: firstComment.message,
+          message: entity.message,
           comment: entity,
           issue,
           media,
@@ -94,6 +89,26 @@ export class IssueCommentSubscriber
               ? createdBy
               : undefined,
         });
+
+        // If the comment has an attachment, send it as a separate notification
+        if (entity.attachmentPath) {
+          notificationManager.sendNotification(Notification.ISSUE_COMMENT, {
+            event: 'Angehängtes Bild',
+            subject: title,
+            message: `Von ${entity.user.displayName}`,
+            comment: entity,
+            issue,
+            media,
+            image: `${applicationUrl}${entity.attachmentPath}`,
+            notifyAdmin: true,
+            notifySystem: true,
+            notifyUser:
+              !createdBy.hasPermission(Permission.MANAGE_ISSUES) &&
+              createdBy.id !== entity.user.id
+                ? createdBy
+                : undefined,
+          });
+        }
       }
     } catch (e) {
       logger.error(

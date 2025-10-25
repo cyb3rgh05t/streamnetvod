@@ -51,11 +51,6 @@ export class IssueSubscriber implements EntitySubscriberInterface<Issue> {
 
       const [firstComment] = sortBy(entity.comments, 'id');
 
-      // If the first comment has an attachment, use it instead of the movie/TV poster
-      if (firstComment.attachmentPath) {
-        image = `${applicationUrl}${firstComment.attachmentPath}`;
-      }
-
       const extra: { name: string; value: string }[] = [];
 
       if (entity.media.mediaType === MediaType.TV && entity.problemSeason > 0) {
@@ -72,6 +67,7 @@ export class IssueSubscriber implements EntitySubscriberInterface<Issue> {
         }
       }
 
+      // Send notification with movie/TV poster
       notificationManager.sendNotification(type, {
         event:
           type === Notification.ISSUE_CREATED
@@ -107,6 +103,27 @@ export class IssueSubscriber implements EntitySubscriberInterface<Issue> {
             ? entity.createdBy
             : undefined,
       });
+
+      // If the first comment has an attachment, send it as a separate notification
+      if (firstComment.attachmentPath) {
+        notificationManager.sendNotification(type, {
+          event: 'Angehängtes Bild',
+          subject: title,
+          message: `Von ${entity.createdBy.displayName}`,
+          issue: entity,
+          media: entity.media,
+          image: `${applicationUrl}${firstComment.attachmentPath}`,
+          notifyAdmin: true,
+          notifySystem: true,
+          notifyUser:
+            !entity.createdBy.hasPermission(Permission.MANAGE_ISSUES) &&
+            entity.modifiedBy?.id !== entity.createdBy.id &&
+            (type === Notification.ISSUE_RESOLVED ||
+              type === Notification.ISSUE_REOPENED)
+              ? entity.createdBy
+              : undefined,
+        });
+      }
     } catch (e) {
       logger.error('Something went wrong sending issue notification(s)', {
         label: 'Notifications',
