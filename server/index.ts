@@ -167,6 +167,7 @@ app
       OpenApiValidator.middleware({
         apiSpec: API_SPEC_PATH,
         validateRequests: true,
+        ignorePaths: /.*\/image\/upload/,
       })
     );
     /**
