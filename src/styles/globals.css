@@ -436,7 +436,24 @@
     --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
   }
 
+  .from-indigo-500,
+  .hover\:from-indigo-500:hover {
+    --tw-gradient-from: rgb(var(--accent-color), 0.5);
+    --tw-gradient-to: rgba(var(--accent-color), 0.3);
+    --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+  }
+
+  .to-purple-500,
+  .hover\:to-purple-500:hover {
+    --tw-gradient-to: rgb(var(--accent-color), 0.7);
+  }
+
   .bg-indigo-600 {
+    --tw-bg-opacity: 1;
+    background-color: rgba(var(--accent-color), var(--tw-bg-opacity));
+  }
+
+  .bg-indigo-500 {
     --tw-bg-opacity: 1;
     background-color: rgba(var(--accent-color), var(--tw-bg-opacity));
   }
@@ -555,6 +572,55 @@
   [role='menuitem']:hover {
     background: rgb(var(--accent-color), 0.3);
   }
+
+  /* TOP GRADIENT - Remove blue tint */
+  #__next
+    > div
+    > div.absolute.top-0.w-full.h-64.from-gray-800.to-gray-900.bg-gradient-to-bl,
+  #__next
+    > div
+    > div.absolute.top-0.w-full.h-64.from-gray-800.to-gray-900.bg-gradient-to-bl
+    .bg-gradient-to-t {
+    background: var(--main-bg-color) !important;
+    background-repeat: repeat, no-repeat;
+    background-attachment: fixed, fixed;
+    background-position: center center, center center;
+    background-size: auto, cover;
+    -webkit-background-size: auto, cover;
+    -moz-background-size: auto, cover;
+    -o-background-size: auto, cover;
+  }
+
+  /* SEARCH BAR */
+  #__next
+    > div
+    > div.relative.flex.flex-col.flex-1.w-0.min-w-0.mb-16.lg\:ml-64
+    > .bg-gray-700 {
+    background-color: rgb(var(--accent-color), 0.3) !important;
+  }
+
+  #search_field {
+    background: var(--transparency-dark-45);
+  }
+
+  /* Remove gradient from cards */
+  #__next
+    > div
+    > div.relative.flex.flex-col.flex-1.w-0.min-w-0.mb-16.lg\:ml-64
+    > main
+    > div
+    > div
+    > div
+    > div.relative.px-2.py-2.-my-2.-ml-4.-mr-4.overflow-x-scroll.overflow-y-auto.whitespace-nowrap.hide-scrollbar.overscroll-x-contain
+    > div
+    > a
+    > div {
+    background: none;
+  }
+
+  #__next > div > div .bg-gradient-to-t.from-gray-800 {
+    background: none !important;
+  }
 }
 
 @layer components {
@@ -578,6 +644,65 @@
     -o-background-size: auto, cover;
     padding-top: env(safe-area-inset-top);
     padding-left: env(safe-area-inset-left);
+  }
+
+  /* Sidebar Navigation Links */
+  #__next
+    > div
+    > div.fixed.top-0.bottom-0.left-0.z-30.hidden.lg\:flex.lg\:flex-shrink-0
+    > div
+    > div
+    > div
+    > nav
+    > a {
+    color: var(--text);
+  }
+
+  /* Active Sidebar Navigation Button - Desktop */
+  #__next
+    > div
+    > div.fixed.top-0.bottom-0.left-0.z-30.hidden.lg\:flex.lg\:flex-shrink-0
+    > div
+    > div
+    > div
+    > nav
+    > a.flex.group.items-center.px-2.py-2.text-lg.leading-6.font-medium.rounded-md.text-white.focus\:outline-none.transition.ease-in-out.duration-150.bg-gradient-to-br.from-indigo-600.to-purple-600.hover\:from-indigo-500.hover\:to-purple-500,
+  #__next
+    > div
+    > div.lg\:hidden
+    > div
+    > div.relative.flex.flex-col.flex-1.w-full.max-w-xs.bg-gray-800.sidebar.appear-done.enter-done
+    > div.flex.flex-col.flex-1.h-0.pt-8.pb-8.overflow-y-auto.sm\:pb-4
+    > nav
+    > a.flex.items-center.px-2.py-2.text-base.leading-6.font-medium.rounded-md.text-white.focus\:outline-none.transition.ease-in-out.duration-150.bg-gradient-to-br.from-indigo-600.to-purple-600.hover\:from-indigo-500.hover\:to-purple-500 {
+    --tw-gradient-from: rgb(var(--accent-color), 0.3) !important;
+    --tw-gradient-stops: var(--tw-gradient-from),
+      var(--tw-gradient-to, rgba(var(--accent-color), 0.3)) !important;
+  }
+
+  /* Active Sidebar Navigation Button Icons */
+  #__next
+    > div
+    > div.fixed.top-0.bottom-0.left-0.z-30.hidden.lg\:flex.lg\:flex-shrink-0
+    > div
+    > div
+    > div
+    > nav
+    > a.flex.group.items-center.px-2.py-2.text-lg.leading-6.font-medium.rounded-md.text-white.focus\:outline-none.transition.ease-in-out.duration-150.bg-gradient-to-br.from-indigo-600.to-purple-600.hover\:from-indigo-500.hover\:to-purple-500
+    > svg {
+    color: rgb(var(--accent-color)) !important;
+  }
+
+  /* Sidebar bottom section */
+  #__next
+    > div
+    > div.fixed.top-0.bottom-0.left-0.z-30.hidden.lg\:flex.lg\:flex-shrink-0
+    > div
+    > div
+    > div
+    > div.px-2
+    > a {
+    background: var(--transparency-dark-25);
   }
 
   .slideover {
