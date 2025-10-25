@@ -16,6 +16,7 @@ const messages = defineMessages({
 
 interface IssueDescriptionProps {
   description: string;
+  attachmentPath?: string;
   belongsToUser: boolean;
   commentCount: number;
   onEdit: (newDescription: string) => void;
@@ -24,6 +25,7 @@ interface IssueDescriptionProps {
 
 const IssueDescription = ({
   description,
+  attachmentPath,
   belongsToUser,
   commentCount,
   onEdit,
@@ -144,14 +146,25 @@ const IssueDescription = ({
           }}
         </Formik>
       ) : (
-        <div className="prose mt-4">
-          <ReactMarkdown
-            allowedElements={['p', 'img', 'strong', 'em']}
-            skipHtml
-          >
-            {description}
-          </ReactMarkdown>
-        </div>
+        <>
+          <div className="prose mt-4">
+            <ReactMarkdown
+              allowedElements={['p', 'img', 'strong', 'em']}
+              skipHtml
+            >
+              {description}
+            </ReactMarkdown>
+          </div>
+          {attachmentPath && (
+            <div className="mt-4">
+              <img
+                src={attachmentPath}
+                alt="Attachment"
+                className="max-h-96 rounded-lg border border-gray-600"
+              />
+            </div>
+          )}
+        </>
       )}
     </div>
   );

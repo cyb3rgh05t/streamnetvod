@@ -125,7 +125,7 @@ interface ReleasesProps {
 
 const Releases = ({ currentVersion }: ReleasesProps) => {
   const intl = useIntl();
-  const { data, error } = useSWR<GitHubRelease[]>(REPO_RELEASE_API);
+  const { data, error } = useSWR<GitHubRelease[]>(GITHUB_RELEASES_API_URL);
 
   if (!data && !error) {
     return <LoadingSpinner />;

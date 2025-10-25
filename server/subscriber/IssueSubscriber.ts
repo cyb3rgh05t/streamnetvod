@@ -4,6 +4,7 @@ import { MediaType } from '@server/constants/media';
 import Issue from '@server/entity/Issue';
 import notificationManager, { Notification } from '@server/lib/notifications';
 import { Permission } from '@server/lib/permissions';
+import { getSettings } from '@server/lib/settings';
 import logger from '@server/logger';
 import { sortBy } from 'lodash';
 import type {
@@ -23,17 +24,24 @@ export class IssueSubscriber implements EntitySubscriberInterface<Issue> {
     let title: string;
     let image: string;
     const tmdb = new TheMovieDb();
+    const { applicationUrl } = getSettings().main;
 
     try {
       if (entity.media.mediaType === MediaType.MOVIE) {
-        const movie = await tmdb.getMovie({ movieId: entity.media.tmdbId, language: 'de' });
+        const movie = await tmdb.getMovie({
+          movieId: entity.media.tmdbId,
+          language: 'de',
+        });
 
         title = `${movie.title}${
           movie.release_date ? ` (${movie.release_date.slice(0, 4)})` : ''
         }`;
         image = `https://image.tmdb.org/t/p/w600_and_h900_bestv2${movie.poster_path}`;
       } else {
-        const tvshow = await tmdb.getTvShow({ tvId: entity.media.tmdbId, language: 'de' });
+        const tvshow = await tmdb.getTvShow({
+          tvId: entity.media.tmdbId,
+          language: 'de',
+        });
 
         title = `${tvshow.name}${
           tvshow.first_air_date ? ` (${tvshow.first_air_date.slice(0, 4)})` : ''
@@ -42,6 +50,12 @@ export class IssueSubscriber implements EntitySubscriberInterface<Issue> {
       }
 
       const [firstComment] = sortBy(entity.comments, 'id');
+
+      // If the first comment has an attachment, use it instead of the movie/TV poster
+      if (firstComment.attachmentPath) {
+        image = `${applicationUrl}${firstComment.attachmentPath}`;
+      }
+
       const extra: { name: string; value: string }[] = [];
 
       if (entity.media.mediaType === MediaType.TV && entity.problemSeason > 0) {

@@ -54,7 +54,7 @@ issueCommentRoutes.get<{ commentId: string }, IssueComment>(
 issueCommentRoutes.put<
   { commentId: string },
   IssueComment,
-  { message: string }
+  { message: string; attachmentPath?: string }
 >(
   '/:commentId',
   isAuthenticated([Permission.MANAGE_ISSUES, Permission.CREATE_ISSUES], {
@@ -76,6 +76,9 @@ issueCommentRoutes.put<
       }
 
       comment.message = req.body.message;
+      if (req.body.attachmentPath !== undefined) {
+        comment.attachmentPath = req.body.attachmentPath;
+      }
 
       await issueCommentRepository.save(comment);
 

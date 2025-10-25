@@ -1,6 +1,7 @@
 import Badge from '@app/components/Common/Badge';
 import Button from '@app/components/Common/Button';
 import CachedImage from '@app/components/Common/CachedImage';
+import ImageUpload from '@app/components/Common/ImageUpload';
 import LoadingSpinner from '@app/components/Common/LoadingSpinner';
 import Modal from '@app/components/Common/Modal';
 import PageTitle from '@app/components/Common/PageTitle';
@@ -301,6 +302,7 @@ const IssueDetails = () => {
         <div className="flex-1 lg:pr-4">
           <IssueDescription
             description={firstComment.message}
+            attachmentPath={firstComment.attachmentPath}
             belongsToUser={belongsToUser}
             commentCount={otherComments.length}
             onEdit={(newMessage) => {
@@ -453,17 +455,25 @@ const IssueDetails = () => {
               <Formik
                 initialValues={{
                   message: '',
+                  attachmentPath: '',
                 }}
                 validationSchema={CommentSchema}
                 onSubmit={async (values, { resetForm }) => {
                   await axios.post(`/api/v1/issue/${issueData?.id}/comment`, {
                     message: values.message,
+                    attachmentPath: values.attachmentPath || undefined,
                   });
                   revalidateIssue();
                   resetForm();
                 }}
               >
-                {({ isValid, isSubmitting, values, handleSubmit }) => {
+                {({
+                  isValid,
+                  isSubmitting,
+                  values,
+                  handleSubmit,
+                  setFieldValue,
+                }) => {
                   return (
                     <Form>
                       <div className="my-6">
@@ -475,6 +485,15 @@ const IssueDetails = () => {
                             messages.commentplaceholder
                           )}
                           className="h-20"
+                        />
+                        <ImageUpload
+                          onImageUploaded={(path) =>
+                            setFieldValue('attachmentPath', path)
+                          }
+                          onImageRemoved={() =>
+                            setFieldValue('attachmentPath', '')
+                          }
+                          currentImage={values.attachmentPath}
                         />
                         <div className="mt-4 flex items-center justify-end space-x-2">
                           {(hasPermission(Permission.MANAGE_ISSUES) ||

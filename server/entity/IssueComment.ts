@@ -28,6 +28,9 @@ class IssueComment {
   @Column({ type: 'text' })
   public message: string;
 
+  @Column({ type: 'text', nullable: true })
+  public attachmentPath?: string;
+
   @CreateDateColumn()
   public createdAt: Date;
 

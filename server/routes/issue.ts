@@ -103,6 +103,7 @@ issueRoutes.post<
     issueType: number;
     problemSeason: number;
     problemEpisode: number;
+    attachmentPath?: string;
   }
 >(
   '/',
@@ -136,6 +137,7 @@ issueRoutes.post<
         new IssueComment({
           user: req.user,
           message: req.body.message,
+          attachmentPath: req.body.attachmentPath,
         }),
       ],
     });
@@ -259,7 +261,11 @@ issueRoutes.get<{ issueId: string }>(
   }
 );
 
-issueRoutes.post<{ issueId: string }, Issue, { message: string }>(
+issueRoutes.post<
+  { issueId: string },
+  Issue,
+  { message: string; attachmentPath?: string }
+>(
   '/:issueId/comment',
   isAuthenticated([Permission.MANAGE_ISSUES, Permission.CREATE_ISSUES], {
     type: 'or',
@@ -289,6 +295,7 @@ issueRoutes.post<{ issueId: string }, Issue, { message: string }>(
       const comment = new IssueComment({
         message: req.body.message,
         user: req.user,
+        attachmentPath: req.body.attachmentPath,
       });
 
       issue.comments = [...issue.comments, comment];

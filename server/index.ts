@@ -186,6 +186,12 @@ app
     // Do not set cookies so CDNs can cache them
     server.use('/imageproxy', clearCookies, imageproxy);
 
+    // Serve issue attachment images
+    server.use(
+      '/issue-attachments',
+      express.static(path.join(__dirname, '../config/issue-attachments'))
+    );
+
     server.get('*', (req, res) => handle(req, res));
     server.use(
       (

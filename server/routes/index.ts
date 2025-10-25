@@ -24,6 +24,7 @@ import { Router } from 'express';
 import authRoutes from './auth';
 import collectionRoutes from './collection';
 import discoverRoutes, { createTmdbWithRegionLanguage } from './discover';
+import imageRoutes from './image';
 import issueRoutes from './issue';
 import issueCommentRoutes from './issueComment';
 import mediaRoutes from './media';
@@ -150,6 +151,7 @@ router.use('/collection', isAuthenticated(), collectionRoutes);
 router.use('/service', isAuthenticated(), serviceRoutes);
 router.use('/issue', isAuthenticated(), issueRoutes);
 router.use('/issueComment', isAuthenticated(), issueCommentRoutes);
+router.use('/image', isAuthenticated(), imageRoutes);
 router.use('/auth', authRoutes);
 
 router.get('/regions', isAuthenticated(), async (req, res, next) => {

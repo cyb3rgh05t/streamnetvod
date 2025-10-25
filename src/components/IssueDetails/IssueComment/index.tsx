@@ -218,11 +218,25 @@ const IssueComment = ({
                 }}
               </Formik>
             ) : (
-              <div className="prose w-full max-w-full">
-                <ReactMarkdown skipHtml allowedElements={['p', 'em', 'strong']}>
-                  {comment.message}
-                </ReactMarkdown>
-              </div>
+              <>
+                <div className="prose w-full max-w-full">
+                  <ReactMarkdown
+                    skipHtml
+                    allowedElements={['p', 'em', 'strong']}
+                  >
+                    {comment.message}
+                  </ReactMarkdown>
+                </div>
+                {comment.attachmentPath && (
+                  <div className="mt-4">
+                    <img
+                      src={comment.attachmentPath}
+                      alt="Attachment"
+                      className="max-h-96 rounded-lg border border-gray-600"
+                    />
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>

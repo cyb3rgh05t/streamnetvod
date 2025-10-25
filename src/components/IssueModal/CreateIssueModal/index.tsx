@@ -1,4 +1,5 @@
 import Button from '@app/components/Common/Button';
+import ImageUpload from '@app/components/Common/ImageUpload';
 import Modal from '@app/components/Common/Modal';
 import { issueOptions } from '@app/components/IssueModal/constants';
 import useSettings from '@app/hooks/useSettings';
@@ -96,6 +97,7 @@ const CreateIssueModal = ({
         message: '',
         problemSeason: availableSeasons.length === 1 ? availableSeasons[0] : 0,
         problemEpisode: 0,
+        attachmentPath: '',
       }}
       validationSchema={CreateIssueModalSchema}
       onSubmit={async (values) => {
@@ -107,6 +109,7 @@ const CreateIssueModal = ({
             problemSeason: values.problemSeason,
             problemEpisode:
               values.problemSeason > 0 ? values.problemEpisode : 0,
+            attachmentPath: values.attachmentPath || undefined,
           });
 
           if (data) {
@@ -309,6 +312,11 @@ const CreateIssueModal = ({
                   <div className="error">{errors.message}</div>
                 )}
             </div>
+            <ImageUpload
+              onImageUploaded={(path) => setFieldValue('attachmentPath', path)}
+              onImageRemoved={() => setFieldValue('attachmentPath', '')}
+              currentImage={values.attachmentPath}
+            />
           </Modal>
         );
       }}
