@@ -1,4 +1,4 @@
-name: Overseerr CI
+name: StreamNet VOD CI
 
 on:
   pull_request:

@@ -33,5 +33,5 @@ body:
       label: Code of Conduct
       description: By submitting this issue, you agree to follow our [Code of Conduct](https://github.com/cyb3rgh05t/streamnetvod/blob/master/CODE_OF_CONDUCT.md)
       options:
-        - label: I agree to follow Overseerr's Code of Conduct
+        - label: I agree to follow StreamNet VOD's Code of Conduct
           required: true

@@ -1,4 +1,4 @@
-# Contributing to Overseerr
+# Contributing to StreamNet VOD
 
 All help is welcome and greatly appreciated! If you would like to contribute to the project, the following instructions should get you started...
 
@@ -93,11 +93,11 @@ When adding new UI text, please try to adhere to the following guidelines:
 8. If an additional description or "tip" is required for a form field, it should be styled using the global CSS class `label-tip`.
 9. In full sentences, abbreviations like "info" or "auto" should not be used in place of full words, unless referencing the name/label of a specific setting or option which has an abbreviation in its name.
 10. Do your best to check for spelling errors and grammatical mistakes.
-11. Do not misspell "Overseerr."
+11. Do not misspell "StreamNet VOD."
 
 ## Translation
 
-We use [Weblate](https://hosted.weblate.org/engage/overseerr/) for our translations, and your help with localizing Overseerr would be greatly appreciated! If your language is not listed below, please [open a feature request](https://github.com/cyb3rgh05t/streamnetvod/issues/new/choose).
+We use [Weblate](https://hosted.weblate.org/engage/overseerr/) for our translations, and your help with localizing StreamNet VOD would be greatly appreciated! If your language is not listed below, please [open a feature request](https://github.com/cyb3rgh05t/streamnetvod/issues/new/choose).
 
 <a href="https://hosted.weblate.org/engage/overseerr/"><img src="https://hosted.weblate.org/widgets/overseerr/-/overseerr-frontend/multi-auto.svg" alt="Translation status" /></a>
 
